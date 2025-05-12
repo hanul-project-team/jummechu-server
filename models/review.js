@@ -9,10 +9,6 @@ const ReviewSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Store",
   },
-  author: {
-    name: String,
-    profileImage: String,
-  },
   rating: {
     type: Number,
     min: 1,
