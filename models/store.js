@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const StoreSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   name: {
     type: String,
     required: true,
@@ -9,13 +13,20 @@ const StoreSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  location: {
-    type: String,
-  },
-  photos: {
-    type: String,
+  latitude: {
+    type: Number,
     required: true,
   },
+  longitude: {
+    type: Number,
+    required: true,
+  },
+  photos: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   phone: {
     type: String,
     required: true,
@@ -24,15 +35,15 @@ const StoreSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
   isExternal: {
     type: Boolean,
-    default: false
+    default: false,
   },
-  keywords: [{ type: String }],
+  keywords: [
+    {
+      type: String,
+    },
+  ],
 });
 
 export default StoreSchema;
