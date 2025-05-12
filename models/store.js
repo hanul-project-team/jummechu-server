@@ -28,6 +28,10 @@ const StoreSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  isExternal: {
+    type: Boolean,
+    default: false
+  },
   keywords: [{ type: String }],
 });
 
