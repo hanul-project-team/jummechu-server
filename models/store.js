@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const StoreSchema = new mongoose.Schema({
+const storeSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -46,4 +46,6 @@ const StoreSchema = new mongoose.Schema({
   ],
 });
 
-export default StoreSchema;
+const Store = mongoose.model("Store", storeSchema)
+
+export default Store;

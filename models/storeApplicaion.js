@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const storeApplicaitonSchema = mongoose.Schema({
+const storeApplicationSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -39,4 +39,6 @@ const storeApplicaitonSchema = mongoose.Schema({
   },
 });
 
-export default storeApplicaitonSchema;
+const StoreApplication = mongoose.model("StoreApplication", storeApplicationSchema)
+
+export default StoreApplication;
