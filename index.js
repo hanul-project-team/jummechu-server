@@ -3,6 +3,7 @@ import cors from 'cors'
 import 'dotenv/config'
 import connect from './config/db.js'
 import indexRouter from './routes/indexRouter.js'
+import apiRouter from './routes/apiRouter.js'
 
 const app = express()
 
@@ -14,5 +15,6 @@ app.use(cors({
 }))
 connect()
 app.use('/', indexRouter)
+app.use('/api', apiRouter)
 
 export default app
