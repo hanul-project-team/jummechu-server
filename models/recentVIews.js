@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const RecentViewSchema = mongoose.Schema({
+const recentViewSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -15,4 +15,6 @@ const RecentViewSchema = mongoose.Schema({
   },
 });
 
-export default RecentViewSchema
+const RecentView = mongoose.model("RecentView", recentViewSchema);
+
+export default RecentView
