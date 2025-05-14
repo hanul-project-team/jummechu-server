@@ -31,7 +31,7 @@ jummechu-server/
     ``` 
 3. .env파일 생성 및 환경변수 설정
     ```env
-    DB_URI = 'mongodb+srv://admin:admin1234@cluster0.mm9wmkv.mongodb.net/'
+    DB_URI = 'mongodb+srv://admin:admin1234@cluster0.mm9wmkv.mongodb.net/jummechu'
     ```
 4. 서버 실행
     ```bash
