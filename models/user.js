@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
@@ -20,8 +20,8 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["guest", "member", "business", "admin"],
-    default: "guest",
+    enum: ["member", "business", "admin"],
+    default: "member",
   },
   keywords: [
     {
@@ -30,4 +30,6 @@ const UserSchema = new mongoose.Schema({
   ],
 });
 
-export default UserSchema;
+const User = mongoose.Model("User", userSchema)
+
+export default User;
