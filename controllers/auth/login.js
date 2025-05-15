@@ -23,13 +23,23 @@ export const login = async (req, res) => {
       expiresIn: "1h",
     });
     const refreshToken = jwt.sign({ email }, process.env.REFRESH_SECRET_KEY, {
-      expiresIn: "30d",
+      expiresIn: rememberMe ? "60d" : "15d",
     });
-    res.cookie("access-token", accessToken,{
+    res.cookie("access_token", accessToken, {
       httpOnly: true,
-      maxAge: 60 * 60 * 1000
+      maxAge: 60 * 60 * 1000,
+    });
+    res.cookie("refresh_token", refreshToken, {
+      httpOnly: true,
+      maxAge: rememberMe ? 60 * 24 * 60 * 60 * 1000 : 15 * 24 * 60 * 60 * 1000,
     });
     res.status(200).json({
+      isAuthenticated: true,
+      user: {
+        name: user.name,
+        profileImage: user.profileImage,
+        role: user.role,
+      },
       message: "로그인 성공",
     });
   } catch (e) {
