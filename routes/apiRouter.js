@@ -4,8 +4,8 @@ const router = express.Router();
 import 'dotenv/config'
 
 router.post("/search", async (req, res) => {
-  const placeName = req.body.name;
-  //   console.log(placeName);
+  const placeName = req.body.place;
+  console.log('검색어:',placeName);
   try {
     const document = await axios
       .get("https://dapi.kakao.com/v2/local/search/keyword.json", {
@@ -22,7 +22,7 @@ router.post("/search", async (req, res) => {
     //   console.log(kakaoPlace)
     res.status(200).send(kakaoPlace)
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     res.status(500).send("카카오 api 호출 실패")
   }
 });
