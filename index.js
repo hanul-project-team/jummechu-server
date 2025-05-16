@@ -6,6 +6,7 @@ import connect from './config/db.js'
 import indexRouter from './routes/indexRouter.js'
 import apiRouter from './routes/apiRouter.js'
 import authRouter from './routes/auth.js'
+import openaiRoutes from './routes/openai.js'
 
 const app = express()
 
@@ -20,5 +21,6 @@ connect()
 app.use('/', indexRouter)
 app.use('/api', apiRouter)
 app.use('/auth', authRouter)
+app.use('/api/openai', openaiRoutes)
 
 export default app
