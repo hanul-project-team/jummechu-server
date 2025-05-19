@@ -1,6 +1,7 @@
 import express from "express";
 import axios from "axios";
 const router = express.Router();
+import generateKeyAndDesc from "../controllers/openai_keyword/callOpenai.js";
 import "dotenv/config";
 
 router.post("/nearplace", async (req, res) => {
@@ -16,11 +17,11 @@ router.post("/nearplace", async (req, res) => {
         params: {
           query: "맛집",
           page: 2,
-          size: 10,
+          size: 15,
           category_group_code: "FD6",
           x: center.lng,
           y: center.lat,
-          radius: 1500,
+          radius: 3000,
         },
       })
       .catch((err) => {
@@ -39,8 +40,8 @@ router.post("/search", async (req, res) => {
   const center = req.body.center;
   const categoryCode = ['FD6', 'CE7']
   try {
-    console.log("검색어:", query);
-    console.log("좌표", center);
+    // console.log("검색어:", query);
+    // console.log("좌표", center);
     
     const requests = categoryCode.map(code => 
       axios
@@ -50,12 +51,12 @@ router.post("/search", async (req, res) => {
         },
         params: {
           query: query,
-          page: 2,
-          size: 10,
+          page: 1,
+          size: 5,
           category_group_code: code,
           x: center.lng,
           y: center.lat,
-          radius: 1500,
+          radius: 3000,
         },
       })
       .catch((err) => {
@@ -65,11 +66,23 @@ router.post("/search", async (req, res) => {
     const kakaoResponse = await Promise.all(requests)
     const kakaoData = kakaoResponse.flatMap(res => res.data.documents);
     // console.log("가게정보", kakaoData);
-    const data = kakaoData.map(kd => 
-      kd.category_name+'/'+kd.address_name+'/'+kd.place_name
+
+
+    const data = await Promise.all(
+      kakaoData.map(async (kd) => {
+        const summary = await generateKeyAndDesc({
+          category: kd.category_name,
+          address_name: kd.address_name,
+          place_name: kd.place_name,
+        });
+        return {
+          ...kd,
+          summary
+        }
+      })
     )
-    console.log('간단정보:',data)
-    res.status(200).json(kakaoData);
+    // console.log('간단정보:',data)
+    res.status(200).json(data);
   } catch (err) {
     // console.log(err);
     res.status(500).send("카카오 api 호출 실패");
