@@ -1,7 +1,6 @@
 import express from "express";
 import axios from "axios";
-import dotenv from "dotenv";
-dotenv.config();
+import 'dotenv/config';
 
 const router = express.Router();
 const endpoint = process.env.AZURE_OPENAI_ENDPOINT; // ex: https://sehwa-makipzh3-swedencentral.cognitiveservices.azure.com
