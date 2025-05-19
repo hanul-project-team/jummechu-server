@@ -19,10 +19,10 @@ router.post("/", async (req, res) => {
     const { prompt: userPrompt } = req.body;
 
     const keywords = userPrompt || "맛있는 음식";
-    const dallePrompt = `일러스트 스타일로 다음 키워드를 반영한 음식점 장면을 그려주세요: ${keywords}. 음식이 놓인 테이블, 가게 분위기를 포함해 주세요.`;
+    const dallePrompt = `일러스트 스타일로 다음 키워드를 반영한 음식점 장면을 그려주세요: ${keywords}.`;
 
     const response = await axios.post(
-      `${endpoint}/openai/deployments/${dalleDeploymentName}/images/generations:submit?api-version=${apiVersion}`,
+      `${endpoint}openai/deployments/${dalleDeploymentName}/images/generations:submit?api-version=${apiVersion}`,
       {
         prompt: dallePrompt,
         n: 1,
