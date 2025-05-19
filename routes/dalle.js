@@ -6,22 +6,27 @@ const router = express.Router();
 
 const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
 const apiKey = process.env.AZURE_OPENAI_API_KEY;
-const dell = process.env.AZURE_OPENAI_DALLE_DEPLOYMENT_NAME;
 const apiVersion = process.env.AZURE_OPENAI_API_VERSION || "2023-12-01-preview";
+const dalleDeploymentName = process.env.AZURE_OPENAI_DALLE_DEPLOYMENT_NAME;
 
 console.log("DALL-E Endpoint:", endpoint); // 추가
 console.log("DALL-E API Key:", apiKey); // 추가
+console.log("DALL-E Deployment Name:", dalleDeploymentName);
 
 router.post("/", async (req, res) => {
+  console.log("Received /api/dalle request body:", req.body);
   try {
-    const { prompt } = req.body;
+    const { prompt: userPrompt } = req.body; // 프론트엔드에서 전달된 프롬프트 사용 가능
+
+    const keywords = userPrompt || "맛있는 음식"; // 기본 프롬프트 또는 사용자 입력 활용
+    const dallePrompt = `일러스트 스타일로 다음 키워드를 반영한 음식점 장면을 그려주세요: ${keywords}. 음식이 놓인 테이블, 가게 분위기를 포함해 주세요.`;
 
     const response = await axios.post(
-      `${endpoint}/openai/images/generations:submit?api-version=${apiVersion}`, // 수정된 부분: apiVersion 사용
+      `${endpoint}/openai/deployments/${dalleDeploymentName}/images/generations?api-version=${apiVersion}`, // 수정된 부분: apiVersion 사용
       {
-        prompt,
+        prompt: dallePrompt,
         n: 1,
-        size: "512x512",
+        size: "1024x1024",
       },
       {
         headers: {
@@ -29,12 +34,52 @@ router.post("/", async (req, res) => {
           "api-key": apiKey,
         },
       }
-    ); // ... (이후 폴링 로직은 그대로 유지)
-  } catch (err) {
-    console.error(
-      "DALL·E 이미지 생성 오류:",
-      err?.response?.data || err.message || err
     );
+    const operationId = initialResponse.data.id;
+    const pollingInterval = 3000; // 3초
+
+    async function pollForImage() {
+      try {
+        const statusResponse = await axios.get(
+          `${endpoint}/openai/operations/${operationId}?api-version=${apiVersion}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "api-key": apiKey,
+            },
+          }
+        );
+
+        const status = statusResponse.data.status;
+
+        if (status === "succeeded") {
+          const imageUrl = statusResponse.data.result.data[0].url;
+          console.log("DALL-E 이미지 생성 성공:", imageUrl);
+          res.json({ imageUrl });
+        } else if (status === "failed") {
+          console.error("DALL-E 이미지 생성 실패:", statusResponse.data.error);
+          res
+            .status(500)
+            .json({
+              error: "이미지 생성 실패",
+              detail: statusResponse.data.error,
+            });
+        } else {
+          setTimeout(pollForImage, pollingInterval);
+        }
+      } catch (error) {
+        console.error("폴링 중 오류 발생:", error);
+        res
+          .status(500)
+          .json({ error: "이미지 생성 실패", detail: error.message });
+      }
+    }
+
+    pollForImage(); // 폴링 시작
+  } catch (err) {
+    console.error("DALL·E 이미지 생성 초기 요청 오류:", err); // 전체 에러 객체 로깅
+    console.error("DALL·E 에러 응답 데이터:", err?.response?.data); // 응답 데이터가 있다면 로깅
+    console.error("DALL·E 에러 메시지:", err?.message); // 에러 메시지 로깅
     res.status(500).json({
       error: "이미지 생성 실패",
       detail: err?.response?.data || err.message,
