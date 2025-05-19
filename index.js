@@ -7,6 +7,7 @@ import indexRouter from './routes/indexRouter.js'
 import apiRouter from './routes/apiRouter.js'
 import authRouter from './routes/auth.js'
 import openaiRoutes from './routes/openai.js'
+import dalleRoutes from './routes/dalle.js'
 
 const app = express()
 
@@ -22,5 +23,6 @@ app.use('/', indexRouter)
 app.use('/api', apiRouter)
 app.use('/auth', authRouter)
 app.use('/api/openai', openaiRoutes)
+app.use('/api/dalle', dalleRoutes)
 
 export default app
