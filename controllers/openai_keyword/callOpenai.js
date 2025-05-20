@@ -8,8 +8,6 @@ async function generateKeywordAndDescription({
 }) {
   const prompt = `
 다음 장소 정보를 기반으로 검색용 키워드와 장소 소개 설명을 만들어줘.
-키워드는 카테고리와 가게명을 이용해서 만들고,
-설명은 카테고리와 주소, 가게명을 모두 이용해서 작성해줘.
 
 장소 정보:
 - 카테고리: ${category}
@@ -18,8 +16,8 @@ async function generateKeywordAndDescription({
 
 [출력 형식 : 반드시 JSON만 반환]
 {
-    "키워드": "쉼표로 구분된 단어 3개",
-    "설명": "2문장 정도의 장소 소개"
+    "키워드": "${category}와 ${place_name}을 이용하여 쉼표로 구분된 단어 3개",
+    "설명": "${category}, ${address_name}, ${place_name}을 이용한 2문장 정도의 장소 소개"
 }
 `;
 
