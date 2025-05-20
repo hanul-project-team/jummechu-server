@@ -7,7 +7,6 @@ import "dotenv/config";
 router.post("/nearplace", async (req, res) => {
   const center = req.body.location;
   // console.log(center);
-  // res.json(center)
   try {
     const kakaoRespond = await axios
       .get("https://dapi.kakao.com/v2/local/search/keyword.json", {
