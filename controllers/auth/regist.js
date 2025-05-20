@@ -1,20 +1,21 @@
 import User from "../../models/user.js";
 
 export const regist = async(req, res) => {
-    const { email, password, name, role, profileImage } = req.body
+    const { email, password, name, phone, role, termsAgreement } = req.body
     try {
         const exisUser = await User.findOne({email})
         if(exisUser) {
             return res.status(400).json({
-                message:'존재하는 사용자'
+                message:'사용 중인 이메일 입니다'
             })
         }
         const newUser = new User({
             email,
             password,
+            phone,
             name,
             role,
-            profileImage
+            agreement: termsAgreement
         })
         await newUser.save()
         res.status(200).json({

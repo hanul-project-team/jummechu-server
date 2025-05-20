@@ -34,6 +34,7 @@ export const check = async(req, res) => {
     res.status(200).json({
       isAuthenticated: true,
       user: {
+        id: user.id,
         name: user.name,
         profileImage: user.profileImage,
         role: user.role,
