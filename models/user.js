@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from 'bcrypt'
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  phone: {
+    type: String,
+    required: true,
+  },
   profileImage: {
     type: String,
     default: "",
@@ -23,6 +27,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ["member", "business", "admin"],
     default: "member",
+  },
+  agreement: {
+    service: { type: Boolean, required: true },
+    privacy: { type: Boolean, required: true },
+    business: { type: Boolean, required: false },
   },
   keywords: [
     {
