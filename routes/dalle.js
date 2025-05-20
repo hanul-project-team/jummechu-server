@@ -1,88 +1,50 @@
 import express from "express";
-import axios from "axios";
+import { AzureOpenAI } from "openai";
 import "dotenv/config";
 
 const router = express.Router();
 
-const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
-const apiKey = process.env.AZURE_OPENAI_API_KEY;
-const apiVersion = process.env.AZURE_OPENAI_API_VERSION || "2023-12-01-preview";
-const dalleDeploymentName = process.env.AZURE_OPENAI_DALLE_DEPLOYMENT_NAME;
+const endpoint = process.env["AZURE_OPENAI_ENDPOINT"];
+const apiKey = process.env["AZURE_OPENAI_API_KEY"];
+const deployment = process.env["AZURE_OPENAI_DALLE_DEPLOYMENT_NAME"];
+const apiVersion = process.env["AZURE_OPENAI_DALLE_API_VERSION"];
 
-console.log("DALL-E Endpoint:", endpoint);
-console.log("DALL-E API Key:", apiKey);
-console.log("DALL-E Deployment Name:", dalleDeploymentName);
+const promptPrefix =
+  "일러스트 스타일로 다음 키워드중에서 가장 많은 키워드 또는 음식의 종류로 일러스트를 그려줘: 키워드:";
+const size = "1024x1024";
+const style = "natural";
+const quality = "standard";
+const n = 1;
+
+async function getClient() {
+  return new AzureOpenAI({ apiKey, endpoint, deployment, apiVersion });
+}
 
 router.post("/", async (req, res) => {
   console.log("Received /api/dalle request body:", req.body);
   try {
     const { prompt: userPrompt } = req.body;
+    const finalPrompt = `${promptPrefix}{${userPrompt}}.`;
 
-    const keywords = userPrompt || "맛있는 음식";
-    const dallePrompt = `일러스트 스타일로 다음 키워드를 반영한 음식점 장면을 그려주세요: ${keywords}.`;
-
-    const response = await axios.post(
-      `${endpoint}openai/deployments/${dalleDeploymentName}/images/generations:submit?api-version=${apiVersion}`,
-      {
-        prompt: dallePrompt,
-        n: 1,
-        size: "1024x1024",
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "api-key": apiKey,
-        },
-      }
-    );
-    const operationId = response.data.id; // <- response에서 operationId 추출
-
-    const pollingInterval = 3000; // 3초
-
-    async function pollForImage() {
-      try {
-        const statusResponse = await axios.get(
-          `${endpoint}/openai/operations/${operationId}?api-version=${apiVersion}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "api-key": apiKey,
-            },
-          }
-        );
-
-        const status = statusResponse.data.status;
-
-        if (status === "succeeded") {
-          const imageUrl = statusResponse.data.result.data[0].url;
-          console.log("DALL-E 이미지 생성 성공:", imageUrl);
-          res.json({ imageUrl });
-        } else if (status === "failed") {
-          console.error("DALL-E 이미지 생성 실패:", statusResponse.data.error);
-          res.status(500).json({
-            error: "이미지 생성 실패",
-            detail: statusResponse.data.error,
-          });
-        } else {
-          setTimeout(pollForImage, pollingInterval);
-        }
-      } catch (error) {
-        console.error("폴링 중 오류 발생:", error);
-        res
-          .status(500)
-          .json({ error: "이미지 생성 실패", detail: error.message });
-      }
-    }
-
-    pollForImage(); // 폴링 시작
-  } catch (err) {
-    console.error("DALL·E 이미지 생성 초기 요청 오류:", err);
-    console.error("DALL·E 에러 응답 데이터:", err?.response?.data);
-    console.error("DALL·E 에러 메시지:", err?.message);
-    res.status(500).json({
-      error: "이미지 생성 실패",
-      detail: err?.response?.data || err.message,
+    const client = await getClient();
+    const results = await client.images.generate({
+      prompt: finalPrompt,
+      n,
+      size,
+      style,
+      quality,
     });
+
+    if (results.data && results.data.length > 0 && results.data[0].url) {
+      console.log("DALL-E 이미지 생성 성공:", results.data[0].url);
+      res.json({ imageUrl: results.data[0].url });
+    } else {
+      console.error("DALL-E 이미지 생성 실패:", results);
+      res.status(500).json({ error: "이미지 생성 실패", detail: results });
+    }
+  } catch (err) {
+    console.error("DALL-E 이미지 생성 오류:", err);
+    res.status(500).json({ error: "이미지 생성 실패", detail: err.message });
   }
 });
 
