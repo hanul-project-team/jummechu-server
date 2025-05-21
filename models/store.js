@@ -24,12 +24,10 @@ const storeSchema = new mongoose.Schema({
   photos: [
     {
       type: String,
-      required: true,
     },
   ],
   phone: {
     type: String,
-    required: true,
   },
   description: {
     type: String,
@@ -46,6 +44,6 @@ const storeSchema = new mongoose.Schema({
   ],
 });
 
-const Store = mongoose.model("Store", storeSchema)
+const Store = mongoose.model("Store", storeSchema);
 
 export default Store;
