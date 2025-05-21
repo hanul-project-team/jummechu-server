@@ -1,7 +1,11 @@
 import User from "../../models/user.js";
 
+
+
 export const regist = async(req, res) => {
-    const { email, password, name, phone, role, termsAgreement } = req.body
+    const { email, password, name, phone, role, termsAgreement, } = req.body
+   
+
     try {
         const exisUser = await User.findOne({email})
         if(exisUser) {
@@ -14,6 +18,7 @@ export const regist = async(req, res) => {
             password,
             phone,
             name,
+            RandomNickname,
             role,
             agreement: termsAgreement
         })
