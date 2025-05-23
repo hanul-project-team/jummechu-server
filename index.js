@@ -5,6 +5,7 @@ import 'dotenv/config'
 import connect from './config/db.js'
 import apiRouter from './routes/api.js'
 import authRouter from './routes/auth.js'
+import storeRouter from './routes/store.js'
 import openaiRoutes from './routes/openai.js'
 import dalleRoutes from './routes/dalle.js'
 
@@ -22,5 +23,6 @@ app.use('/api', apiRouter)
 app.use('/auth', authRouter)
 app.use('/api/openai', openaiRoutes)
 app.use('/api/dalle', dalleRoutes)
+app.use('/store', storeRouter)
 
 export default app
