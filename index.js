@@ -5,8 +5,8 @@ import 'dotenv/config'
 import connect from './config/db.js'
 import apiRouter from './routes/api.js'
 import authRouter from './routes/auth.js'
-import openaiRoutes from './routes/openai.js'
-import dalleRoutes from './routes/dalle.js'
+// import openaiRoutes from './routes/openai.js'
+// import dalleRoutes from './routes/dalle.js'
 
 const app = express()
 
@@ -20,7 +20,7 @@ app.use(cookieParser())
 connect()
 app.use('/api', apiRouter)
 app.use('/auth', authRouter)
-app.use('/api/openai', openaiRoutes)
-app.use('/api/dalle', dalleRoutes)
+// app.use('/api/openai', openaiRoutes)
+// app.use('/api/dalle', dalleRoutes)
 
 export default app
