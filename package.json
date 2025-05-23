@@ -8,6 +8,8 @@
     "dev": "nodemon ./server.js"
   },
   "dependencies": {
+    "@azure/openai": "^2.0.0",
+    "axios": "^1.9.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
