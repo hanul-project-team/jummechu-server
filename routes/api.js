@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
-import KakaoRouter from '../controllers/kakao_api/callKakaoApi.js'
+import KakaoApi from '../controllers/api/callKakaoApi.js'
 
-router.use('/kakao', KakaoRouter)
+router.use('/kakao', KakaoApi)
 
 export default router;
