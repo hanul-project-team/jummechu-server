@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const BookmarkSchema = mongoose.Schema({
+const bookmarkSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -15,4 +15,6 @@ const BookmarkSchema = mongoose.Schema({
   },
 });
 
-export default BookmarkSchema;
+const Bookmark = mongoose.model("Bookmark", bookmarkSchema);
+
+export default Bookmark;
