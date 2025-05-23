@@ -31,11 +31,10 @@ const storeSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true,
   },
   isExternal: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   keywords: [
     {
