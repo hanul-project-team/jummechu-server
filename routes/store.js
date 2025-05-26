@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
-import regist from "../controllers/store/regist.js";
+import save from "../controllers/store/save.js";
 
-router.post("/regist", regist);
+router.post("/save", save);
 
 export default router;
