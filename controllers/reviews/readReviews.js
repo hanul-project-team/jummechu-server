@@ -1,8 +1,8 @@
 import Review from "../../models/review.js";
 
-const readAll = async (req, res) => {
+const readReviews = async (req, res) => {
   const storeId = req.params.id;
-  //   console.log(storeId);
+    // console.log(storeId);
 
   try {
     const foundReviews = await Review.find({ store: storeId })
@@ -17,4 +17,4 @@ const readAll = async (req, res) => {
   }
 };
 
-export default readAll;
+export default readReviews;
