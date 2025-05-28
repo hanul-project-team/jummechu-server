@@ -5,7 +5,7 @@ import readReviews from '../controllers/reviews/readReviews.js'
 import readAll from '../controllers/reviews/readAllReviews.js'
 
 router.get('/read/:id', readReviews)
-router.get('/readall', readAll)
+router.post('/readall', readAll)
 router.post('/regist', regist)
 
 export default router
