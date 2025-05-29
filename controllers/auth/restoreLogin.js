@@ -1,7 +1,7 @@
 import User from "../../models/user.js";
 import jwt from "jsonwebtoken";
 
-export const check = async(req, res) => {
+export const restoreLogin = async(req, res) => {
   let accessToken = req.cookies.access_token;
   const refreshToken = req.cookies.refresh_token;
   let decoded;
