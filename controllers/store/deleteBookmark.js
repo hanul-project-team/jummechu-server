@@ -18,9 +18,12 @@ const deleteBookmark = async (req, res) => {
 
   try {
     const delBookmark = await Bookmark.deleteOne({ user, store });
-    return res.status(200).json({
-      msg: "북마크 삭제 처리 완료",
-    });
+    if(delBookmark.deletedCount === 1) {
+      console.log('북마크 삭제완료')
+      return res.status(200).json({
+        msg: "북마크 삭제 처리 완료",
+      });
+    }
   } catch (err) {
     res.status(500).json({
       msg: "북마크 삭제 요청 에러",
