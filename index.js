@@ -24,6 +24,7 @@ app.use('/api', apiRouter)
 app.use('/auth', authRouter)
 
 
-app.use('/uploads/profile', express.static(path.join(__dirname, 'profileuploads')));
+app.use('/uploads/profile', express.static(path.join(__dirname, 'uploads', 'profile', 'profileuploads')));
+app.use('/static', express.static(path.join(__dirname, 'static')));
 
 export default app

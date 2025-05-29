@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 const profileImageStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const targetPath = path.join(__dirname, "../../profileuploads"); 
+    const targetPath = path.join(__dirname, "../../uploads/profile/profileuploads"); 
     console.log("Multer가 파일을 저장하려는 경로:", targetPath);
     cb(null, targetPath);
   },
