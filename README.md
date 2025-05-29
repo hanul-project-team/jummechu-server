@@ -38,6 +38,11 @@ jummechu-server/
    DB_URI = 'mongodb+srv://admin:admin1234@cluster0.mm9wmkv.mongodb.net/jummechu'
    ACCESS_SECRET_KEY = 'access'
    REFRESH_SECRET_KEY = 'refresh'
+   RESET_SECRET_KEY = 'reset'
+   SMS_VERIFY_KEY = 'verify'
+   SOLAPI_API_SECRET = 'ILY2BWBNEGMIAEHBWH7EHEY4UUZTR2Z8'
+   SOLAPI_API_KEY = 'NCSQOO6OIHZXY8JG'
+   SOLAPI_SENDER = '01090242352'
    API_KEY = AIzaSyCOuC8VMrObyMzES4vfMr-2urbDrNMydTY
    KAKAO_KEY = 37188c706645c703ed7ee46eea04b377
    AZURE_OPENAI_ENDPOINT=https://sehwa-makipzh3-swedencentral.cognitiveservices.azure.com
