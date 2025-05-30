@@ -10,6 +10,12 @@ import { verifyResetToken } from "../controllers/auth/verifyResetToken.js";
 import { resetPassword } from "../controllers/auth/resetPassword.js";
 import { logout } from "../controllers/auth/logout.js";
 import { restoreLogin } from "../controllers/auth/restoreLogin.js";
+import { myprofile, uploadProfile, resetProfileImage, updateProfile, changePassword, deleteAccount  } from "../controllers/auth/myprofile.js"
+import { uploadProfileImage } from '../controllers/auth/multer.js'
+import { verifyPassword } from "../controllers/auth/verifyPassword.js";
+import { protect } from '../middlewares/authMiddleware.js'
+import { addRecentView, getRecentViews } from '../controllers/auth/recentHistory.js';
+
 
 const router = express.Router();
 
@@ -22,7 +28,23 @@ router.post("/send_link", sendLink);
 router.post("/verify_code", verifyCode);
 router.post("/verify_reset_token", verifyResetToken);
 router.post("/reset_password", resetPassword);
+router.post('/upload/profile', protect, uploadProfileImage, uploadProfile )
+router.post("/verify-password", protect, verifyPassword);
+router.post('/recent-history', protect, addRecentView); // 새로운 기록 추가 또는 업데이트
+
 router.get("/logout", logout);
 router.get("/restore_login", restoreLogin);
+// router.get('/check', check)
+router.get('/logout', logout)
+router.get('/myprofile', protect, myprofile)
+router.get('/recent-history', protect, getRecentViews); // 최근 기록 조회
 
-export default router;
+router.put('/profile-image/reset',  protect, resetProfileImage);
+router.put('/change-password',  protect, changePassword);
+router.put('/profile',  protect, updateProfile);
+
+router.delete('/account', protect, deleteAccount);
+
+
+
+export default router

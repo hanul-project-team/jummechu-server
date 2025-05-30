@@ -18,7 +18,7 @@ const openaiApiVersion = process.env.AZURE_OPENAI_API_VERSION || "2024-12-01-pre
 
 router.post("/openai", async (req, res) => {
   const prompt = req.body.headers.prompt;
-//   console.log('리퀘스트 바디로 넘어론 스트링',prompt)
+  console.log('리퀘스트 바디로 넘어론 스트링',prompt)
 
   try {
     const response = await axios.post(
@@ -108,7 +108,7 @@ function getPriorityKeywords(keywordCounts) {
 }
 
 router.post("/dalle", async (req, res) => {
-//   console.log("Received /api/azure/dalle request body:", req.body);
+  console.log("Received /api/azure/dalle request body:", req.body);
   try {
     // const { prompt: userPrompt } = req.body.prompt;
     const userPrompt = req.body.prompt;
