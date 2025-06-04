@@ -185,7 +185,7 @@ export const resetProfileImage = async (req, res) => {
 
 export const changePassword = async (req, res) => {
   try {
-    const userId = req.user.id; // 인증 미들웨어를 통해 req.user.id를 가져온다고 가정
+    const userId = req.user.id;
     const { newPassword, confirmPassword } = req.body;
 
     console.log("백엔드 changePassword 호출됨. userId:", userId);
@@ -194,8 +194,9 @@ export const changePassword = async (req, res) => {
       newPassword,
       "confirmPassword:",
       confirmPassword
-    ); // 1. 새 비밀번호 유효성 검사
+    );
 
+    // 1. 새 비밀번호 유효성 검사
     if (!newPassword || !confirmPassword) {
       console.log("changePassword: 새 비밀번호 또는 확인 비밀번호 누락");
       return res
@@ -213,22 +214,43 @@ export const changePassword = async (req, res) => {
       return res
         .status(400)
         .json({ message: "새 비밀번호는 최소 6자 이상이어야 합니다." });
-    } // --- ★★★ 이 부분부터 bcrypt 해싱 로직을 추가합니다. ★★★ --- // 2. 사용자를 데이터베이스에서 찾기
+    }
 
+    // 2. 사용자를 데이터베이스에서 찾기
     const user = await User.findById(userId);
     if (!user) {
       console.log("changePassword: 사용자를 찾을 수 없음");
       return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
-    } // 3. 새 비밀번호를 해싱
+    }
 
+    // ★★★ 3. 새 비밀번호를 해싱 (가장 중요!) ★★★
     const salt = await bcrypt.genSalt(10); // 솔트 생성
-    const hashedPassword = await bcrypt.hash(newPassword, salt); // 새 비밀번호 해싱 // 4. 사용자 모델의 비밀번호 필드를 해싱된 비밀번호로 업데이트
+    const hashedPassword = await bcrypt.hash(newPassword, salt); // 새 비밀번호 해싱
 
-    user.password = hashedPassword; // 5. 변경된 사용자 모델을 데이터베이스에 저장
+    console.log("changePassword: 생성된 해시 비밀번호:", hashedPassword); // 해시 값 확인 로그
 
-    await user.save(); // 변경사항을 DB에 반영
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { password: hashedPassword }, // password 필드를 해싱된 값으로 직접 업데이트
+      { new: true, runValidators: true } // 업데이트된 문서 반환, 스키마 유효성 검사 실행
+    );
 
-    console.log("changePassword: 비밀번호 성공적으로 변경됨.");
+    if (!updatedUser) {
+      console.log(
+        "changePassword: 비밀번호 업데이트 후 사용자 찾을 수 없음 (비정상)"
+      );
+      return res
+        .status(500)
+        .json({
+          message: "비밀번호 업데이트 후 사용자 정보를 찾을 수 없습니다.",
+        });
+    }
+
+    console.log(
+      "changePassword: 비밀번호 성공적으로 변경됨. DB에 최종 저장된 해시:",
+      updatedUser.password
+    ); // 업데이트 후 반환된 user의 비밀번호 확인
+
     res.status(200).json({ message: "비밀번호가 성공적으로 변경되었습니다." });
   } catch (error) {
     console.error("백엔드 비밀번호 변경 중 서버 오류:", error);

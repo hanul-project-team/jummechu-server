@@ -4,7 +4,7 @@ import axios from "axios";
 import generateKeyAndDesc from "../openai_keyword/callOpenai.js";
 import "dotenv/config";
 
-router.post('/nearplace', async (req, res) => {
+router.post('/user/nearplace', async (req, res) => {
   const center = req.body.location;
   // console.log(center);
   try {
