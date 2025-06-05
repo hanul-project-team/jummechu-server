@@ -8,8 +8,6 @@ import authRouter from './routes/auth.js'
 import storeRouter from './routes/store.js'
 import reviewRouter from './routes/review.js'
 import boodmarkRouter from './routes/bookmark.js'
-import openaiRoutes from './routes/openai.js'
-import dalleRoutes from './routes/dalle.js'
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -27,8 +25,8 @@ app.use(cookieParser())
 connect()
 app.use('/api', apiRouter)
 app.use('/auth', authRouter)
-app.use('/api/openai', openaiRoutes)
-app.use('/api/dalle', dalleRoutes)
+// app.use('/api/openai', openaiRoutes)
+// app.use('/api/dalle', dalleRoutes)
 app.use('/store', storeRouter)
 app.use('/review', reviewRouter)
 app.use('/bookmark', boodmarkRouter)
