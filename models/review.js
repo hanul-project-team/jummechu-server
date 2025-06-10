@@ -21,6 +21,9 @@ const reviewSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  attachments: [{
+    type: String
+  }]
 });
 
 const Review = mongoose.model("Review", reviewSchema);

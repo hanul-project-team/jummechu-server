@@ -10,6 +10,10 @@ import reviewRouter from './routes/review.js'
 import boodmarkRouter from './routes/bookmark.js'
 import openaiRoutes from './routes/openai.js'
 import dalleRoutes from './routes/dalle.js'
+import { fileURLToPath } from 'url'
+import path from 'path'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const app = express()
 
@@ -19,6 +23,7 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+app.use('/attachments', express.static(path.join(__dirname, 'attachments')))
 app.use(cookieParser())
 connect()
 app.use('/api', apiRouter)
