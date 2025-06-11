@@ -15,7 +15,7 @@ import { uploadProfileImage } from '../controllers/auth/multer.js'
 import { verifyPassword } from "../controllers/auth/verifyPassword.js";
 import { protect } from '../middlewares/authMiddleware.js'
 import { addRecentView, getRecentViews } from '../controllers/auth/recentHistory.js';
-
+import { getPlaceById } from '../controllers/auth/placeController.js'; 
 
 const router = express.Router();
 
@@ -38,6 +38,7 @@ router.get("/restore_login", restoreLogin);
 router.get('/logout', logout)
 router.get('/myprofile', protect, myprofile)
 router.get('/recent-history', protect, getRecentViews); // 최근 기록 조회
+router.get('/places/:id', getPlaceById); 
 
 router.put('/profile-image/reset',  protect, resetProfileImage);
 router.put('/change-password',  protect, changePassword);
