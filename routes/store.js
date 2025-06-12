@@ -6,6 +6,6 @@ import getStoreInfo from "../controllers/store/getStoreInfo.js";
 
 router.post("/save", save);
 router.get('/read/:id', renewStoreInfo)
-router.get('/storeInfo', getStoreInfo)
+router.post('/storeInfo', getStoreInfo)
 
 export default router;
