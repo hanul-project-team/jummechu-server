@@ -1,27 +1,14 @@
 import Store from "../../models/store.js";
+import StoreImg from "../../models/storeImg.js";
 import generateKeyAndDesc from "../openai_keyword/callOpenai.js";
 
 const saveStore = async (req, res) => {
   const placeData = req.body;
-
-  if (
-    !placeData.address_name ||
-    !placeData.place_name ||
-    (!placeData.x && !placeData.y)
-  ) {
-    res.status(500).json({
-      msg: "가게 정보를 불러오는데 실패했습니다. 다시 시도해 주세요",
-    });
-  }
-
   try {
     const existStore = await Store.findOne({
       name: placeData.place_name,
       address: placeData.address_name,
     });
-    if (existStore) {
-      res.status(201).json(existStore);
-    }
 
     if (!existStore) {
       const newStore = new Store({
@@ -32,24 +19,40 @@ const saveStore = async (req, res) => {
         phone: placeData.phone,
         keywords: placeData?.summary ? placeData.summary.keyword : [],
         description: placeData?.summary ? placeData.summary.description : "",
+        photos: [],
       });
-      await newStore.save();
-      res.status(201).json(newStore);
-      
-      const summary = placeData.summary;
+      // await newStore.save();
+      console.log(newStore)
 
-      if (summary === undefined || summary === null) {
-        const newSummary = await generateKeyAndDesc({
-          category: placeData.category_name,
-          address_name: placeData.address_name,
-          place_name: placeData.place_name,
-        });
+      // const summary = placeData.summary;
 
-        await Store.findByIdAndUpdate(newStore._id, {
-          keywords: newSummary.keyword,
-          description: newSummary.description
-        })
-      }
+      // if (summary === undefined || summary === null) {
+      //   const newSummary = await generateKeyAndDesc({
+      //     category: placeData.category_name,
+      //     address_name: placeData.address_name,
+      //     place_name: placeData.place_name,
+      //   });
+      //   const allStoreImgs = await StoreImg.find();
+      //   let matchedImages = [];
+      //   for (const img of allStoreImgs) {
+      //     const isMatch = newSummary.keyword.some((kw) =>
+      //       kw.includes(img.keyword)
+      //     );
+      //     if (isMatch) {
+      //       matchedImages.push(img);
+      //     }
+      //   }
+      //   if (matchedImages.length > 0) {
+      //     const randomImg =
+      //       matchedImages[Math.floor(Math.random() * matchedImages.length)];
+      //   }
+
+      //   await Store.findByIdAndUpdate(newStore._id, {
+      //     keywords: newSummary.keyword,
+      //     description: newSummary.description,
+      //   });
+      // }
+      // res.status(201).json(newStore);
     }
   } catch (err) {
     res.status(500).json({
