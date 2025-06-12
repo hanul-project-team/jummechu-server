@@ -1,6 +1,8 @@
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import 'dotenv/config'
 import connect from './config/db.js'
 import apiRouter from './routes/api.js'
@@ -22,6 +24,7 @@ app.use(cors({
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use('/attachments', express.static(path.join(__dirname, 'attachments')))
+app.use('/static', express.static(path.join( __dirname, 'static')))
 app.use(cookieParser())
 connect()
 app.use('/api', apiRouter)
