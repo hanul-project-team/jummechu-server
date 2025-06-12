@@ -1,5 +1,6 @@
 import Review from "../../models/review.js";
 import Store from '../../models/store.js'
+import generateKeyAndDesc from '../openai_keyword/callOpenai.js'
 
 const readReviews = async (req, res) => {
   const places = req.body.places
@@ -24,8 +25,10 @@ const readReviews = async (req, res) => {
     }
 
     const allReviews = await Review.find({store: {$in:storeIds}}).populate('store', 'name address')
-
-    res.status(200).json(allReviews);
+    
+    res.status(200).json({
+      data: {allReviews, allStores}
+    });
   } catch (err) {
     console.log(err);
   }
