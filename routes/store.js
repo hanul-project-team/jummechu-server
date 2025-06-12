@@ -1,9 +1,11 @@
 import express from "express";
 const router = express.Router();
 import save from "../controllers/store/saveStore.js";
-import getStoreInfo from '../controllers/store/getStoreInfo.js'
+import renewStoreInfo from '../controllers/store/renewStoreInfo.js'
+import getStoreInfo from "../controllers/store/getStoreInfo.js";
 
 router.post("/save", save);
-router.get('/read/:id', getStoreInfo)
+router.get('/read/:id', renewStoreInfo)
+router.get('/storeInfo', getStoreInfo)
 
 export default router;
