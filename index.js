@@ -10,8 +10,6 @@ import authRouter from './routes/auth.js'
 import storeRouter from './routes/store.js'
 import reviewRouter from './routes/review.js'
 import boodmarkRouter from './routes/bookmark.js'
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 const app = express()
 const __filename = fileURLToPath(import.meta.url);
