@@ -13,6 +13,7 @@ import path from 'path'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+
 const app = express()
 
 app.use(cors({
@@ -34,7 +35,7 @@ app.use('/review', reviewRouter)
 app.use('/bookmark', boodmarkRouter)
 
 
-app.use('/uploads/profile', express.static(path.join(__dirname, 'uploads', 'profileuploads')));
+app.use('/uploads/profile', express.static(path.join(__dirname, 'uploads', 'profile', 'profileuploads')));
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
 export default app
