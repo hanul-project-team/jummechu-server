@@ -8,6 +8,10 @@ import authRouter from './routes/auth.js'
 import storeRouter from './routes/store.js'
 import reviewRouter from './routes/review.js'
 import boodmarkRouter from './routes/bookmark.js'
+import { fileURLToPath } from 'url'
+import path from 'path'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const app = express()
 
@@ -30,7 +34,7 @@ app.use('/review', reviewRouter)
 app.use('/bookmark', boodmarkRouter)
 
 
-app.use('/uploads/profile', express.static(path.join(__dirname, 'uploads', 'profile', 'profileuploads')));
+app.use('/uploads/profile', express.static(path.join(__dirname, 'uploads', 'profileuploads')));
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
 export default app
