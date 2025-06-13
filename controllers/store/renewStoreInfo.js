@@ -2,6 +2,7 @@ import Store from "../../models/store.js";
 
 const renewStoreInfo = async (req, res) => {
   const storeId = req.params.id;
+  // console.log(storeId)
   if (!storeId) {
     return res.status(400).json({
       msg: "잘못된 접근입니다.",
