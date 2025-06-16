@@ -1,14 +1,14 @@
-import StoreImg from "./models/storeImg.js";
+import StoreImg from "../models/storeImg.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import connect from "./config/db.js";
+import connect from "../config/db.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const apiKey = process.env.AZURE_OPENAI_API_KEY;
-const delay = ms => new Promise(res => setTimeout(res, ms));
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 const keywords = [
 ];
@@ -18,15 +18,14 @@ const keywordMap = {
 
 async function generateImage(keyword, index) {
   const filename = `${Date.now()}-${index + 1}.png`;
-  const filePath = path.join(__dirname, "static", filename);
+  const filePath = path.join(__dirname, "..", "static", filename);
 
   try {
     const response = await axios.post(
-      `https://sbs24-mbof1aly-swedencentral.cognitiveservices.azure.com/openai/deployments/dall-e-3/images/generations?api-version=2024-02-01`,
+      `${process.env.AZURE_OPENAI_ENDPOINT}/openai/deployments/dall-e-3/images/generations?api-version=2024-02-01`,
       {
-        // prompt: `A close-up, realistic photo of only ${keyword} on a plate, taken at a real restaurant with natural lighting. No background clutter — just the food in focus.`,
         prompt: keyword,
-        style:"natural",
+        style: "natural",
       },
       {
         headers: {
