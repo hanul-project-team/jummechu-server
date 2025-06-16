@@ -4,6 +4,7 @@ import generateKeyAndDesc from '../openai_keyword/callOpenai.js'
 
 const readReviews = async (req, res) => {
   const places = req.body.places
+  // console.log(places)
   const placesCondition = places.map((pl, i) => ({
     name: pl.name,
     address: pl.address
