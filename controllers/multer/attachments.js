@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 import path from 'path'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const uploadPath = path.join(__dirname, '../..', 'attachments')
+const uploadPath = path.join(__dirname, '../..', 'uploads/attachments')
 
 const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg']
 
