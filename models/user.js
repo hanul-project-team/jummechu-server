@@ -9,15 +9,15 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: false,
   },
   name: {
     type: String,
-    required: true,
+    required: false,
   },
   phone: {
     type: String,
-    required: true,
+    required: false,
   },
   profileImage: {
     type: String,
@@ -29,8 +29,8 @@ const userSchema = new mongoose.Schema({
     default: "member",
   },
   agreement: {
-    service: { type: Boolean, required: true },
-    privacy: { type: Boolean, required: true },
+    service: { type: Boolean, required: false },
+    privacy: { type: Boolean, required: false },
     business: { type: Boolean, required: false },
   },
   keywords: [
@@ -40,8 +40,12 @@ const userSchema = new mongoose.Schema({
   ],
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
+  isAccountSetting: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 userSchema.pre("save", async function (next) {
