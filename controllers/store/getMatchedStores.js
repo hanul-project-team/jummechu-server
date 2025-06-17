@@ -40,7 +40,7 @@ const getMatchedStores = async (req, res) => {
         store.longitude,
         store.latitude
       );
-      return distance <= maxDistance;
+      return distance <= maxDistance && distance > 0;
     });
     return {
       tag,
