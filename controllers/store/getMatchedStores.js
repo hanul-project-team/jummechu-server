@@ -44,7 +44,7 @@ const getMatchedStores = async (req, res) => {
     });
     return {
       tag,
-      stores: matchedStores.slice(0, 20),
+      stores: matchedStores.slice(0, 10),
     };
   });
 
