@@ -5,7 +5,7 @@ const readUserReviews = async (req, res) => {
 
   try {
     const foundReviews = await Review.find({ user: userId })
-      .populate("store", "name address phone")
+      .populate("store", "name address phone photos")
       .populate("user", "name");
 
       if(foundReviews.length < 1) {
