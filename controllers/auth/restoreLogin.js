@@ -1,7 +1,7 @@
 import User from "../../models/user.js";
 import jwt from "jsonwebtoken";
 
-export const restoreLogin = async(req, res) => {
+export const restoreLogin = async (req, res) => {
   let accessToken = req.cookies.access_token;
   const refreshToken = req.cookies.refresh_token;
   let decoded;
@@ -35,9 +35,11 @@ export const restoreLogin = async(req, res) => {
       isAuthenticated: true,
       user: {
         id: user.id,
+        email: user.email,
         name: user.name,
         profileImage: user.profileImage,
         role: user.role,
+        isAccountSetting: user.isAccountSetting,
       },
       message: "세션 연결 성공",
     });

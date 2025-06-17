@@ -17,6 +17,7 @@ export const regist = async (req, res) => {
       name,
       role,
       agreement: { service, privacy, business },
+      isAccountSetting: true
     });
     await newUser.save();
     res.status(200).json({
