@@ -37,9 +37,11 @@ export const login = async (req, res) => {
       isAuthenticated: true,
       user: {
         id: user.id,
+        email: user.email,
         name: user.name,
         profileImage: user.profileImage,
         role: user.role,
+        isAccountSetting: user.isAccountSetting,
       },
       message: "로그인 성공",
     });

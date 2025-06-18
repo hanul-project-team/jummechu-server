@@ -8,6 +8,8 @@ import { sendLink } from "../controllers/auth/sendLink.js";
 import { verifyCode } from "../controllers/auth/verifyCode.js";
 import { verifyResetToken } from "../controllers/auth/verifyResetToken.js";
 import { resetPassword } from "../controllers/auth/resetPassword.js";
+import { googleVerify } from "../controllers/auth/googleVerify.js";
+import { accountSetting } from "../controllers/auth/accountSetting.js";
 import { logout } from "../controllers/auth/logout.js";
 import { restoreLogin } from "../controllers/auth/restoreLogin.js";
 
@@ -21,8 +23,10 @@ router.post("/send_code", sendCode);
 router.post("/send_link", sendLink);
 router.post("/verify_code", verifyCode);
 router.post("/verify_reset_token", verifyResetToken);
-router.post("/reset_password", resetPassword);
+router.post("/google_verify", googleVerify);
 router.get("/logout", logout);
 router.get("/restore_login", restoreLogin);
+router.put("/reset_password", resetPassword);
+router.put("/account_setting/:id", accountSetting);
 
 export default router;
