@@ -26,7 +26,7 @@ const saveBookmark = async (req, res) => {
         store,
       });
       await newBookmark.save();
-      console.log('북마크 등록 완료')
+      // console.log('북마크 등록 완료')
       res.status(201).json(newBookmark);
     }
   } catch (err) {
