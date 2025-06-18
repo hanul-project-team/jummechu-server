@@ -1,58 +1,70 @@
-# 점메추(Jummechu) - 점심 뿐 아니라 아침, 저녁, 야식까지 추천해주는 맛집 검색 사이트
+# 점메추(Jummechu) - 맛집 검색 및 사용자 맞춤 추천 사이트
 
 ## 기술스택
+### Backend
+- **Express 5**: 최신 Node.js 웹 프레임워크
+- **MongoDB + Mongoose**: NoSQL 기반 데이터베이스 및 ODM 라이브러리
+- **dotenv**: 환경변수 관리를 위한 모듈
+- **cookie-parser**: 요청 쿠키를 파싱하기 위한 미들웨어
+- **cors**: Cross-Origin 요청 허용을 위한 설정 미들웨어
+
+### 인증 & 보안
+- **jsonwebtoken (JWT)**: 사용자 인증을 위한 토큰 발급 및 검증
+- **bcrypt**: 비밀번호 해싱 및 비교를 위한 암호화 라이브러리
+- **google-auth-library**: 구글 OAuth 인증 처리를 위한 라이브러리
+- **crypto**: 내장 암호화 모듈을 활용한 보안 처리
+
+### API 통신
+- **Axios**: 외부 API 연동 시 HTTP 요청을 처리하는 클라이언트 라이브러리
+
+### AI 연동
+- **@azure/openai**: Azure OpenAI API를 통해 AI 추천 기능 구현
 
 ## 폴더구조
-
 ```bash
 jummechu-server/
 │
 ├── config/                 # 데이터베이스 연결 설정
 ├── controllers/            # 요청 로직 처리
-├── models/                 # 데이터베이스 모델 스키마
+├── models/                 # MongoDB 모델 스키마 정의
 ├── node_modules/
-├── routes/                 # API 라우팅
+├── routes/                 # API 라우터 정의 (기능별로 요청 경로와 컨트롤러 연결)
+├── static/                 # 정적 파일 제공용 폴더
+├── uploads/                # 사용자 업로드 파일 저장 폴더
 ├── .env
 ├── .gitignore
-├── index.js                # Express 서버 설정
+├── index.js                # Express 서버 설정 및 미들웨어 구성
 ├── package.json
 ├── README.md
-├── server.js               # 서버 실행
+├── server.js               # 서버 실행 시작점
 └── yarn.lock
 ```
 
-## 실행방법
+## 환경변수 설정
+```bash
+.env
+ACCESS_SECRET_KEY=your-access-token-secret-key 
+AZURE_OPENAI_API_ENDPOINT=your-azure-openai-api-endpoint
+AZURE_OPENAI_API_KEY=your-azure-openai-api-key
+AZURE_OPENAI_API_VERSION=2025-01-01-preview
+AZURE_OPENAI_DALLE_DEPLOYMENT_NAME=dall-e-3
+AZURE_OPENAI_DEPLOYMENT=gpt-4.1
+CORS_ORIGIN=http://localhost:5173
+DB_URI=mongodb+srv://<db_id>:<db_password>@cluster0.mm9wmkv.mongodb.net/jummechu
+GOOGLE_CLIENT_ID=your-google-client-id
+KAKAO_KEY=your-kakao-key
+NHN_API_SECRET_KEY=your-nhn-api-secret-key
+NHN_APP_SECRET_KEY=your-nhn-app-secret-key
+NHN_RESET_PASSWORD_TEMPLATE=your-nhn-reset-password-template
+PORT=3000
+REFRESH_SECRET_KEY=your-refresh-token-secret-key
+RESET_SECRET_KEY=your-reset-token-secret-key
+SMS_VERIFY_KEY=your-sms-verification-secret-key
+SOLAPI_API_PUBLIC_KEY=your-solapi-api-public-key
+SOLAPI_API_SECRET_KEY=your-solapi-api-secret-key
+SOLAPI_PHONE_NUMBER=your-phone-number
+```
 
-1. 프로젝트 클론
-   ```bash
-   git clone https://github.com/hanul-project-team/jummechu-server.git
-   cd jummechu-server
-   ```
-2. 패키지 설치
-   ```bash
-   yarn
-   ```
-3. .env파일 생성 및 환경변수 설정
-
-   ```env
-   DB_URI = 'mongodb+srv://admin:admin1234@cluster0.mm9wmkv.mongodb.net/jummechu'
-   ACCESS_SECRET_KEY = 'access'
-   REFRESH_SECRET_KEY = 'refresh'
-   RESET_SECRET_KEY = 'reset'
-   SMS_VERIFY_KEY = 'verify'
-   SOLAPI_API_SECRET = 'ILY2BWBNEGMIAEHBWH7EHEY4UUZTR2Z8'
-   SOLAPI_API_KEY = 'NCSQOO6OIHZXY8JG'
-   SOLAPI_SENDER = '01090242352'
-   API_KEY = AIzaSyCOuC8VMrObyMzES4vfMr-2urbDrNMydTY
-   KAKAO_KEY = 37188c706645c703ed7ee46eea04b377
-   AZURE_OPENAI_ENDPOINT=https://sehwa-makipzh3-swedencentral.cognitiveservices.azure.com
-   AZURE_OPENAI_API_KEY=3a1oqVonav1jdyEWphUnKUBS2VSZJpgXVI0Ucotx1q9zwB6FxSsWJQQJ99BEACfhMk5XJ3w3AAAAACOGHsJq
-   AZURE_OPENAI_DEPLOYMENT=gpt-4.1
-   AZURE_OPENAI_DALLE_DEPLOYMENT_NAME=dall-e-3
-   AZURE_OPENAI_API_VERSION=2025-01-01-preview
-   ```
-
-4. 서버 실행
-   ```bash
-   yarn run dev
-   ```
+## GitHub 및 서비스 주소
+- **클라이언트 GitHub**: [https://github.com/hanul-project-team/jummechu-client](https://github.com/hanul-project-team/jummechu-client)
+- **서버 GitHub**: [https://github.com/hanul-project-team/jummechu-server](https://github.com/hanul-project-team/jummechu-server)
