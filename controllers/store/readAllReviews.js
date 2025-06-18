@@ -3,7 +3,7 @@ import Review from "../../models/review.js";
 const readReviews = async (req, res) => {
   const requestedPlaces = req.body.places;
   const places = requestedPlaces.flat();
-
+  
   try {
     const storeIds = places.map((place) => place._id);
     if (!storeIds || storeIds.length < 1) {
@@ -14,7 +14,7 @@ const readReviews = async (req, res) => {
 
     const allReviews = await Review.find({ store: { $in: storeIds } }).populate(
       "store",
-      "name address"
+      "name address photos"
     );
 
     res.status(200).json(allReviews);
