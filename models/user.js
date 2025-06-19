@@ -50,7 +50,6 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-http://localhost3000/사진이름. jpg
 
 userSchema.pre("save", async function (next) {
   try {

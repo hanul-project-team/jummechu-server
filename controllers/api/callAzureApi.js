@@ -1,7 +1,7 @@
 import express from "express";
 import axios from "axios";
 import 'dotenv/config';
-import { AzureOpenAI }  from "openai"; // 사용자 코드에서 이 라이브러리를 사용 중이므로 유지
+import { AzureOpenAI } from "openai"; // 사용자 코드에서 이 라이브러리를 사용 중이므로 유지
 
 const router = express.Router();
 
@@ -15,13 +15,23 @@ const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT; // OpenAI 텍스트 
 const openaiApiVersion = process.env.AZURE_OPENAI_API_VERSION || "2024-02-15"; // OpenAI 텍스트 모델 API 버전 (최신 권장 버전)
 
 router.post("/openai", async (req, res) => {
-    // ★★★ 수정: 이제 'prompt'는 req.body의 최상위 필드로 직접 전달됩니다. ★★★
-    const userPrompt = req.body.prompt; 
-    console.log('리퀘스트 바디로 넘어온 스트링 (처리 후):', userPrompt);
+    // ★★★ 위치 정보 추출 추가 (기존 코드 유지) ★★★
+    const { prompt: userPrompt, latitude, longitude } = req.body;
+    console.log('Received /api/azure/openai request body:', req.body);
 
     if (!userPrompt || String(userPrompt).trim() === '') {
         return res.status(400).json({ error: "프롬프트가 제공되지 않았습니다." });
     }
+
+    // ★★★ 위치 정보를 프롬프트에 추가 (기존 코드 유지) ★★★
+    let fullPrompt = userPrompt;
+    if (latitude && longitude) {
+        fullPrompt = `사용자의 현재 위치 (위도: ${latitude}, 경도: ${longitude}) 근처에서, ${userPrompt}`;
+        console.log(`AI 프롬프트에 위치 정보 추가됨: 위도 ${latitude}, 경도 ${longitude}`);
+    } else {
+        console.log("위치 정보가 제공되지 않았습니다. 일반적인 추천을 수행합니다.");
+    }
+    console.log('OpenAI로 전송될 최종 프롬프트:', fullPrompt);
 
     try {
         const response = await axios.post(
@@ -29,12 +39,10 @@ router.post("/openai", async (req, res) => {
             {
                 messages: [
                     { role: "system", content: "당신은 음식점 추천 전문가입니다. 요청된 정보만 JSON 형식의 문자열로 제공하세요. 추가적인 설명은 하지 마십시오." },
-                    { role: "user", content: userPrompt },
+                    { role: "user", content: fullPrompt }, // 수정된 프롬프트 사용
                 ],
-                max_tokens: 1000, // 더 긴 JSON 응답을 위해 토큰 수 증가
+                max_tokens: 1000, 
                 temperature: 0.7,
-                // response_format은 요청된 프롬프트와 일치하도록 명시적으로 지정하지 않습니다.
-                // 프롬프트가 이미 JSON 문자열을 요청하고 있으므로 모델의 자율성에 맡깁니다.
             },
             {
                 headers: {
@@ -47,13 +55,12 @@ router.post("/openai", async (req, res) => {
         const replyContent = response.data.choices[0].message.content;
         console.log('OpenAI로부터 받은 원시 응답:', replyContent);
 
-        // OpenAI 응답을 JSON으로 파싱 시도. 실패하면 원시 문자열 그대로 반환
         try {
             const parsedReply = JSON.parse(replyContent);
-            res.status(200).json(parsedReply); // 파싱된 JSON 객체를 응답
+            res.status(200).json(parsedReply); 
         } catch (jsonParseError) {
             console.warn("OpenAI 응답이 유효한 JSON 형식이 아닙니다. 원시 문자열로 전송합니다.", jsonParseError);
-            res.status(200).json(replyContent); // 파싱 실패 시 원시 문자열 그대로 응답
+            res.status(200).json(replyContent); 
         }
 
     } catch (error) {
@@ -68,14 +75,13 @@ router.post("/openai", async (req, res) => {
 
 // --------------------------- DALL-E (변경 없음) ---------------------------
 
-const promptPrefix = "실제사진처럼  ";
-const promptSuffix = "음식을 표현해주세요";
+const promptPrefix = "실제사진처럼 ";
+const promptSuffix = " 음식을 표현해주세요";
 const size = "1024x1024";
 const style = "natural";
 const quality = "hd";
 const n = 1;
 
-// 사용자의 AzureOpenAI 초기화 방식을 유지합니다.
 async function getClient() {
     return new AzureOpenAI({ apiKey, endpoint, deployment, apiVersion:dalleApiVersion });
 }

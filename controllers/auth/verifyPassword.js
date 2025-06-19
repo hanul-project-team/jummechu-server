@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import User from '../../models/user.js'; // user.js 소문자 확인
 
 export const verifyPassword = async (req, res, next) => {
+    
+    
     try {
         const { password: enteredPassword } = req.body; // 프론트에서 보낸 비밀번호만 가져옴
 

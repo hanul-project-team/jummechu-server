@@ -35,7 +35,7 @@ app.use('/review', reviewRouter)
 app.use('/bookmark', boodmarkRouter)
 
 
-app.use('/uploads/profile', express.static(path.join(__dirname, 'uploads', 'profile', 'profileuploads')));
+app.use('/uploads/profileuploads', express.static(path.join(__dirname, 'uploads', 'profileuploads')));
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
 export default app

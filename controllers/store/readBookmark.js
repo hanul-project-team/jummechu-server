@@ -6,7 +6,7 @@ const readBookmark = async (req, res) => {
   try {
     const foundUserBookmark = await Bookmark.find({ user }).populate(
       "store",
-      "_id name address phone"
+      "_id name address phone photos"
     );
 
     return res.status(200).json(foundUserBookmark);
