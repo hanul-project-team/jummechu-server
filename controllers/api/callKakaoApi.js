@@ -46,8 +46,6 @@ router.post("/search", async (req, res) => {
   const center = req.body.center;
   const categoryCode = ["FD6", "CE7"];
   try {
-    // console.log("검색어:", query);
-    // console.log("좌표", center);
 
     const requests = categoryCode.map((code) =>
       axios
@@ -67,11 +65,15 @@ router.post("/search", async (req, res) => {
         })
         .catch((err) => {
           console.log("에러 발생", err);
+          return null;
         })
     );
     const kakaoResponse = await Promise.all(requests);
-    const kakaoData = kakaoResponse.flatMap((res) => res.data.documents);
-    // console.log("가게정보", kakaoData);
+    const validResponses = kakaoResponse.filter((res) => res !== null);
+    const kakaoData = validResponses.flatMap((res) => res.data.documents);
+    if (kakaoData.length === 0) {
+      return res.status(204).json({ message: "검색 결과가 없습니다." });
+    }
 
     const data = await Promise.all(
       kakaoData.map(async (kd) => {
@@ -86,10 +88,8 @@ router.post("/search", async (req, res) => {
         };
       })
     );
-    // console.log('간단정보:',data)
     res.status(200).json(data);
   } catch (err) {
-    // console.log(err);
     res.status(500).send("카카오 api 호출 실패");
   }
 });

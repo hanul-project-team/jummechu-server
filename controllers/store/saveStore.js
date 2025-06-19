@@ -16,8 +16,8 @@ const saveStore = async (req, res) => {
       places.map(async (placeData) => {
         // console.log("2-3 for of currentStore 생성 = undefined");
         const existStore = await Store.findOne({
-          name: placeData.place_name,
-          address: placeData.address_name,
+          name: placeData?.place_name ?? placeData?.name,
+          address: placeData?.address_name ?? placeData?.address,
         });
         // console.log("2-4 existStore", existStore === null ? "없음" : '잇음');
 
@@ -38,7 +38,7 @@ const saveStore = async (req, res) => {
             photos: [],
           });
           await newStore.save();
-          // console.log("2-6 서버 미등록 newStore 생성 등록");
+          console.log("2-6 DB 미등록 newStore 생성", newStore.name);
 
           try {
             const newSummary = await generateKeyAndDesc({
