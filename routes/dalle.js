@@ -9,8 +9,8 @@ const apiKey = process.env.AZURE_OPENAI_API_KEY;
 const dell = process.env.AZURE_OPENAI_DALLE_DEPLOYMENT_NAME;
 const apiVersion = process.env.AZURE_OPENAI_API_VERSION || "2023-12-01-preview";
 
-console.log("DALL-E Endpoint:", endpoint); // 추가
-console.log("DALL-E API Key:", apiKey); // 추가
+// console.log("DALL-E Endpoint:", endpoint); // 추가
+// console.log("DALL-E API Key:", apiKey); // 추가
 
 router.post("/", async (req, res) => {
   try {

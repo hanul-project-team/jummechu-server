@@ -17,14 +17,13 @@ const reviewSchema = new mongoose.Schema({
   comment: {
     type: String,
   },
-  isExternal: {
-    type: Boolean,
-    default: false
-  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  attachments: [{
+    type: String
+  }]
 });
 
 const Review = mongoose.model("Review", reviewSchema);
