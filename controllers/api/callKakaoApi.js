@@ -72,7 +72,6 @@ router.post("/search", async (req, res) => {
     const validResponses = kakaoResponse.filter((res) => res !== null);
     const kakaoData = validResponses.flatMap((res) => res.data.documents);
     if (kakaoData.length === 0) {
-      console.log("카카오 데이터 없음 반환")
       return res.status(204).json({ message: "검색 결과가 없습니다." });
     }
 
