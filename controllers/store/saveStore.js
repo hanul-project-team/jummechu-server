@@ -1,6 +1,6 @@
 import Store from "../../models/store.js";
 import StoreImg from "../../models/storeImg.js";
-import generateKeyAndDesc from "../openai_keyword/callOpenai.js";
+import generateKeyAndDesc from "../../service/openai_keyword/callOpenai.js";
 
 const saveStore = async (req, res) => {
   const places = Array.isArray(req.body) ? req.body : [req.body];
