@@ -1,8 +1,8 @@
 import express from 'express'
 const router = express.Router()
-import saveBookmark from '../controllers/store/saveBookmark.js'
-import deleteBookmark from '../controllers/store/deleteBookmark.js'
-import readBookmark from '../controllers/store/readBookmark.js'
+import saveBookmark from '../controllers/bookmark/saveBookmark.js'
+import deleteBookmark from '../controllers/bookmark/deleteBookmark.js'
+import readBookmark from '../controllers/bookmark/readBookmark.js'
 
 router.post('/regist/:id', saveBookmark)
 router.delete('/delete/:id', deleteBookmark)
