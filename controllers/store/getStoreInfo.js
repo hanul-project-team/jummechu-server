@@ -23,8 +23,8 @@ const getStoreInfo = async (req, res) => {
     }
   } else {
     const existStore = await Store.findOne({
-      name: placeData?.name || placeData?.place_name,
-      address: placeData?.address || placeData?.address_name,
+      name: placeData?.name ?? placeData?.place_name,
+      address: placeData?.address ?? placeData?.address_name,
     });
     if (existStore) {
       // console.log("1-1 등록되어있음. 마침");
