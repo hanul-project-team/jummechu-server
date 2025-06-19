@@ -266,7 +266,7 @@ export const addRecentView = async (req, res) => {
       recentView.keywords = finalKeywords;
       recentView.storeName = name;
       recentView.photos = photos || []; // ★★★ thumbnail -> photos로 변경 ★★★
-      recentView.rating = rating || 0;
+      recentView.rating = rating,
       recentView.address = address || "";
       await recentView.save();
       console.log(
@@ -282,7 +282,7 @@ export const addRecentView = async (req, res) => {
         keywords: finalKeywords,
         storeName: name,
         photos: photos || [], // ★★★ thumbnail -> photos로 변경 ★★★
-        rating: rating || 0,
+        rating: rating,
         address: address || "",
       });
       await recentView.save();
@@ -373,6 +373,7 @@ export const getRecentViews = async (req, res) => {
         address: item.store.address,
         photos: item.store.photos, // 여기서 item.store.photos를 사용
         keyword: item.keywords,
+        rating: item.rating,
         viewedAt: item.createdAt,
         // 이전에 포함되었던 thumbnail, rating 필드는 RecentView 모델에 직접 저장된 값을 사용하거나,
         // 필요하다면 store.rating/store.thumbnail을 populate해서 가져와야 합니다.
