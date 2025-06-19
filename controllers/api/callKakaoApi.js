@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 import axios from "axios";
-import generateKeyAndDesc from "../openai_keyword/callOpenai.js";
+import generateKeyAndDesc from "../../service/openai_keyword/callOpenai.js";
 import "dotenv/config";
 
 router.post("/user/nearplace", async (req, res) => {

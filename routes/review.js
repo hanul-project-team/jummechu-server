@@ -1,12 +1,12 @@
 import express from 'express'
 const router = express.Router();
-import regist from '../controllers/store/registReview.js'
-import readStoreReviews from '../controllers/store/readStoreReviews.js'
-import readUserReviews from '../controllers/user/readUserReviews.js'
-import readAll from '../controllers/store/readAllReviews.js'
-import deleteReview from '../controllers/store/deleteReview.js'
-import modifyReview from '../controllers/store/modifyReview.js'
-import attach from '../controllers/multer/attachments.js'
+import regist from '../controllers/review/registReview.js'
+import readStoreReviews from '../controllers/review/readStoreReviews.js'
+import readUserReviews from '../controllers/review/readUserReviews.js'
+import readAll from '../controllers/review/readAllReviews.js'
+import deleteReview from '../controllers/review/deleteReview.js'
+import modifyReview from '../controllers/review/modifyReview.js'
+import attach from '../middlewares/multer/attachments.js'
 
 router.get('/read/store/:id', readStoreReviews)
 router.get('/read/user/:id', readUserReviews)
