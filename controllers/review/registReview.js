@@ -15,7 +15,7 @@ const regist = async (req, res) => {
     comment: data.comment,
     store: data.store,
     rating: data.rating,
-    attachments: files.map(file => file.filename),
+    attachments: files.map(file => "/uploads/attachments/"+file.filename),
   });
   // console.log(newReview)
   await newReview.save();
