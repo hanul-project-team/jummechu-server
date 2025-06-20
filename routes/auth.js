@@ -33,7 +33,7 @@ router.post("/google_verify", googleVerify);
 router.post("/reset_password", resetPassword);
 router.post('/upload/profile', protect, uploadProfileImage, uploadProfile )
 router.post("/verify-password", protect, verifyPassword);
-router.post('/recent-history', protect, addRecentView); // 새로운 기록 추가 또는 업데이트
+router.post('/recent-history/add', protect, addRecentView); 
 
 router.get("/logout", logout);
 router.get("/restore_login", restoreLogin);
