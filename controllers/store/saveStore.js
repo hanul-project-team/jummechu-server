@@ -3,21 +3,26 @@ import StoreImg from "../../models/storeImg.js";
 import generateKeyAndDesc from "../../service/openai_keyword/callOpenai.js";
 
 const saveStore = async (req, res) => {
-  const places = Array.isArray(req.body) ? req.body : [req.body];
-  // console.log(places);
+  const rawPlaces = Array.isArray(req.body) ? req.body : [req.body];
+  // console.log(rawPlaces);
   // console.log("2-2 등록 과정 실행");
 
-  if (places.length === 0) {
+  if (rawPlaces.length === 0) {
     return res.status(400).json({ msg: "등록할 데이터가 없습니다." });
   }
+  const places = rawPlaces.map(normalizePlaceInput);
 
   try {
     const results = await Promise.all(
       places.map(async (placeData) => {
         // console.log("2-3 for of currentStore 생성 = undefined");
+        if (!placeData.name || !placeData.address) {
+          console.warn("이름 또는 주소 누락", placeData);
+          return null; 
+        }
         const existStore = await Store.findOne({
-          name: placeData?.place_name ?? placeData?.name,
-          address: placeData?.address_name ?? placeData?.address,
+          name: placeData?.name,
+          address: placeData?.address,
         });
         // console.log("2-4 existStore", existStore === null ? "없음" : '잇음');
 
@@ -28,8 +33,8 @@ const saveStore = async (req, res) => {
 
         if (!existStore) {
           const newStore = new Store({
-            name: placeData.place_name,
-            address: placeData.address_name,
+            name: placeData?.name,
+            address: placeData?.address,
             latitude: placeData.y,
             longitude: placeData.x,
             phone: placeData.phone,
@@ -43,8 +48,8 @@ const saveStore = async (req, res) => {
           try {
             const newSummary = await generateKeyAndDesc({
               category: placeData.category_name,
-              address_name: placeData.address_name,
-              place_name: placeData.place_name,
+              address_name: placeData.address,
+              place_name: placeData.name,
             });
             // console.log("2-7 미등록용 newSummary 생성");
 
@@ -108,4 +113,13 @@ const saveStore = async (req, res) => {
     });
   }
 };
+
+function normalizePlaceInput(input) {
+  return {
+    name: input.place_name?.trim() || input.name?.trim() || "",
+    address: input.address_name?.trim() || input.address?.trim() || "",
+    x: input.x || input.longitude,
+    y: input.y || input.latitude,
+  };
+}
 export default saveStore;
