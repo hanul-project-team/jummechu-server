@@ -25,16 +25,17 @@ export const login = async (req, res) => {
     const refreshToken = jwt.sign({ email }, process.env.REFRESH_SECRET_KEY, {
       expiresIn: rememberMe ? "60d" : "15d",
     });
-    res.cookie("access_token", accessToken, {
+    const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    };
+    res.cookie("access_token", accessToken, {
+      ...cookieOptions,
       maxAge: 60 * 60 * 1000,
     });
     res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      ...cookieOptions,
       maxAge: rememberMe ? 60 * 24 * 60 * 60 * 1000 : 15 * 24 * 60 * 60 * 1000,
     });
     res.status(200).json({

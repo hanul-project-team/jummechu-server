@@ -17,6 +17,11 @@ export const googleVerify = async (req, res) => {
         .json({ message: "토큰 payload가 유효하지 않습니다." });
     }
     const user = await User.findOne({ email: payload.email });
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    };
     if (!user) {
       const newUser = new User({
         email: payload.email,
@@ -40,15 +45,11 @@ export const googleVerify = async (req, res) => {
         }
       );
       res.cookie("access_token", accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+        ...cookieOptions,
         maxAge: 60 * 60 * 1000,
       });
       res.cookie("refresh_token", refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+        ...cookieOptions,
         maxAge: 15 * 24 * 60 * 60 * 1000,
       });
       return res.status(200).json({
@@ -79,15 +80,11 @@ export const googleVerify = async (req, res) => {
       }
     );
     res.cookie("access_token", accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'productin',
-      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      ...cookieOptions,
       maxAge: 60 * 60 * 1000,
     });
     res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'productin',
-      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      ...cookieOptions,
       maxAge: 15 * 24 * 60 * 60 * 1000,
     });
     res.status(200).json({
