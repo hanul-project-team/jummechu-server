@@ -23,6 +23,7 @@ export const restoreLogin = async (req, res) => {
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
+        sameSite: 'None',
         maxAge: 60 * 60 * 1000,
       });
     } else {

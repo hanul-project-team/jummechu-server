@@ -28,11 +28,13 @@ export const login = async (req, res) => {
     res.cookie("access_token", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
+      sameSite: 'None',
       maxAge: 60 * 60 * 1000,
     });
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
+      sameSite: 'None',
       maxAge: rememberMe ? 60 * 24 * 60 * 60 * 1000 : 15 * 24 * 60 * 60 * 1000,
     });
     res.status(200).json({
