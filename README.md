@@ -1,6 +1,7 @@
 # 점메추(Jummechu) - 맛집 검색 및 사용자 맞춤 추천 사이트
 
 ## 링크모음
+- **서버 주소**: [https://jummechu.ddnsfree.com](https://jummechu.ddnsfree.com)
 - **클라이언트 GitHub**: [https://github.com/hanul-project-team/jummechu-client](https://github.com/hanul-project-team/jummechu-client)
 - **서버 GitHub**: [https://github.com/hanul-project-team/jummechu-server](https://github.com/hanul-project-team/jummechu-server)
 - **Static 이미지 다운로드**: [https://drive.google.com/file/d/1_f7uvEnh8i-GiPJpguup5j8Fpptfa2_X/view?usp=drive_link](https://drive.google.com/file/d/1_f7uvEnh8i-GiPJpguup5j8Fpptfa2_X/view?usp=drive_link)
@@ -13,6 +14,7 @@
 - **dotenv**: 환경변수 관리를 위한 모듈
 - **cookie-parser**: 요청 쿠키를 파싱하기 위한 미들웨어
 - **cors**: Cross-Origin 요청 허용을 위한 설정 미들웨어
+- **multer**: 멀티파트 폼 데이터(예: 이미지, 파일 업로드) 처리를 위한 미들웨어
 
 
 ### 인증 & 보안
@@ -64,6 +66,7 @@ CORS_ORIGIN=http://localhost:5173
 DB_URI=mongodb+srv://<db_id>:<db_password>@cluster0.mm9wmkv.mongodb.net/jummechu
 GOOGLE_CLIENT_ID=your-google-client-id
 KAKAO_KEY=your-kakao-key
+KAKAO_REDIRECT_URI='http://localhost:5173/kakao_callback'
 NHN_API_SECRET_KEY=your-nhn-api-secret-key
 NHN_APP_SECRET_KEY=your-nhn-app-secret-key
 NHN_RESET_PASSWORD_TEMPLATE=your-nhn-reset-password-template
@@ -91,6 +94,7 @@ SOLAPI_PHONE_NUMBER=your-phone-number
 | PUT    | /auth/account_setting/:id    | 소셜 간편가입 계정설정 요청           |
 | POST   | /auth/find_account           | 아이디 찾기 요청                     |
 | POST   | /auth/google_verify          | 구글 간편 로그인 인증 요청           |
+| POST   | /auth/kakao_verify           | 카카오 간편 로그인 인증 요청           |
 | GET    | /auth/logout                 | 로그아웃 요청                        |
 | POST   | /auth/login                  | 로그인 요청                          |
 | POST   | /auth/regist                 | 회원가입 요청                        |
