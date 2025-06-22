@@ -35,6 +35,8 @@ export const sendCode = async (req, res) => {
     });
     res.cookie("sms_verify_token", smsVerifyToken, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
       maxAge: 3 * 60 * 1000,
     });
     return res.status(200).json({

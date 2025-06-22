@@ -1,7 +1,12 @@
 export const logout = (req, res) => {
-    res.clearCookie("access_token")
-    res.clearCookie("refresh_token")
-    res.json({
-        message: "로그아웃 완료"
-    })
-}
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+  };
+  res.clearCookie("access_token", cookieOptions);
+  res.clearCookie("refresh_token", cookieOptions);
+  res.json({
+    message: "로그아웃 완료",
+  });
+};
