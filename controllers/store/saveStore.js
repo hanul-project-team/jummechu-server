@@ -4,8 +4,6 @@ import generateKeyAndDesc from "../../service/openai_keyword/callOpenai.js";
 
 const saveStore = async (req, res) => {
   const rawPlaces = Array.isArray(req.body) ? req.body : [req.body];
-  // console.log(rawPlaces);
-  // console.log("2-2 등록 과정 실행");
 
   if (rawPlaces.length === 0) {
     return res.status(400).json({ msg: "등록할 데이터가 없습니다." });
@@ -15,7 +13,6 @@ const saveStore = async (req, res) => {
   try {
     const results = await Promise.all(
       places.map(async (placeData) => {
-        // console.log("2-3 for of currentStore 생성 = undefined");
         if (!placeData.name || !placeData.address) {
           console.warn("이름 또는 주소 누락", placeData);
           return null;
@@ -24,12 +21,10 @@ const saveStore = async (req, res) => {
           name: placeData?.name,
           address: placeData?.address,
         });
-        // console.log("2-4 existStore", existStore === null ? "없음" : '잇음');
 
         if (existStore) {
           return existStore.toObject();
         }
-        // console.log("2-5 existStore 배열 등록");
 
         if (!existStore) {
           const newStore = new Store({
@@ -64,7 +59,6 @@ const saveStore = async (req, res) => {
               address_name: placeData.address,
               place_name: placeData.name,
             });
-            // console.log("2-7 미등록용 newSummary 생성");
 
             let keys = [];
             if (typeof newSummary.keyword === "string") {
@@ -102,12 +96,10 @@ const saveStore = async (req, res) => {
                     ]
                   : [],
             };
-            // console.log("2-8 이미지 매칭및 데이터 업데이트");
 
             await Store.findByIdAndUpdate({ _id: newStore._id }, updatedData);
             const updatedStore = await Store.findById({ _id: newStore._id });
 
-            // console.log("2-8-1 업데이트 데이터 반환");
             return updatedStore.toObject();
           } catch (err) {
             console.log("진행불가 에러 발생", err);
@@ -117,8 +109,6 @@ const saveStore = async (req, res) => {
       })
     );
 
-    // console.log(results);
-    // console.log("2-9 등록작업완료");
     res.status(201).json(results);
   } catch (err) {
     res.status(500).json({

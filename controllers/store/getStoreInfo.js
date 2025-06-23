@@ -2,7 +2,6 @@ import Store from "../../models/store.js";
 
 const getStoreInfo = async (req, res) => {
   const placeData = req.body;
-  // console.log('요청 들어온 장소 정보',placeData);
   if (Array.isArray(placeData)) {
     const normalizedPlaces = placeData.map(normalizePlaceInput);
     try {
@@ -12,12 +11,10 @@ const getStoreInfo = async (req, res) => {
             name: place?.name,
             address: place?.address,
           });
-          // console.log("1번 반환");
           return existStore ? existStore.toObject() : null;
         })
       );
       const filteredStores = findStores.filter(Boolean);
-      // console.log("2번 반환");
       return res.status(200).json(filteredStores);
     } catch (err) {
       console.log("배열 데이터 map 실패", err);
@@ -34,11 +31,8 @@ const getStoreInfo = async (req, res) => {
       address: place?.address,
     });
     if (existStore) {
-      // console.log("1-1 등록되어있음. 마침");
-      // console.log(existStore)
       return res.status(200).json(existStore);
     } else {
-      console.log("2 미등록 빈배열 반환");
       return res.json(existStore);
     }
   }
