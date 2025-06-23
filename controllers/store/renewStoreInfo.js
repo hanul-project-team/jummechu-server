@@ -2,7 +2,6 @@ import Store from "../../models/store.js";
 
 const renewStoreInfo = async (req, res) => {
   const storeId = req.params.id;
-  // console.log(storeId)
   if (!storeId || storeId === "undefined") {
     return res.status(400).json({
       msg: "storeId가 존재하지 않습니다.",
