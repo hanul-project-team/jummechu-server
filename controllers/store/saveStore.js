@@ -18,7 +18,7 @@ const saveStore = async (req, res) => {
         // console.log("2-3 for of currentStore 생성 = undefined");
         if (!placeData.name || !placeData.address) {
           console.warn("이름 또는 주소 누락", placeData);
-          return null; 
+          return null;
         }
         const existStore = await Store.findOne({
           name: placeData?.name,
@@ -42,8 +42,21 @@ const saveStore = async (req, res) => {
             description: placeData?.summary?.description || "",
             photos: [],
           });
-          await newStore.save();
           console.log("2-6 DB 미등록 newStore 생성", newStore.name);
+
+          try {
+            await newStore.save();
+          } catch (err) {
+            if (err.code === 11000) {
+              const duplicateStore = await Store.findOne({
+                name: placeData?.name,
+                address: placeData?.address,
+              });
+              return duplicateStore.toObject();
+            } else {
+              throw err;
+            }
+          }
 
           try {
             const newSummary = await generateKeyAndDesc({
