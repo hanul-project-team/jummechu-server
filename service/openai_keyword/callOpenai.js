@@ -7,18 +7,23 @@ async function generateKeywordAndDescription({
   place_name,
 }) {
   const prompt = `
-다음 장소 정보를 기반으로 검색용 키워드와 장소 소개 설명을 만들어줘.
+다음 장소 정보를 바탕으로 검색용 키워드와 간단한 장소 소개를 작성해줘.
 
 장소 정보:
 - 카테고리: ${category}
 - 주소: ${address_name}
 - 가게명: ${place_name}
 
-[출력 형식 : 반드시 JSON만 반환]
+[출력 형식: 반드시 JSON만 반환. 설명은 2문장 내외. 키워드는 쉼표(,)로 구분된 단어 3개.]
 {
-    "키워드": "${category}와 ${place_name}을 이용하여 쉼표로 구분된 단어 3개",
-    "설명": "${category}, ${address_name}, ${place_name}을 이용한 2문장 정도의 장소 소개"
+  "키워드": "장소와 관련된 인기 키워드, 예: 메뉴, 분위기, 서비스 특징, 고객층 등을 포함한 단어들",
+  "설명": "장소의 카테고리, 위치, 특성을 반영하여 마케팅에 적합한 설명 문장"
 }
+
+조건:
+- 장소명, 주소, 카테고리 이름을 그대로 키워드에 넣지 말 것
+- 키워드는 일반 사용자가 검색할 때 유용한 단어로 생성할 것
+- 예: '분위기 좋은', '혼밥 추천', '직장인 점심', '가성비 맛집', '감성 카페'
 `;
 
   try {
@@ -43,7 +48,6 @@ async function generateKeywordAndDescription({
       }
     );
 
-    // console.log("OpenAI 응답:", JSON.stringify(response.data, null, 2));
     const content = response.data.choices[0].message.content;
     try {
       const parsed = JSON.parse(content);
