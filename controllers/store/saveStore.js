@@ -17,6 +17,9 @@ const saveStore = async (req, res) => {
           console.warn("이름 또는 주소 누락", placeData);
           return null;
         }
+        if (!placeData.category_name) {
+          console.warn("category_name 누락", placeData)
+        }
         const existStore = await Store.findOne({
           name: placeData?.name,
           address: placeData?.address,
@@ -123,6 +126,7 @@ function normalizePlaceInput(input) {
     address: input.address_name?.trim() || input.address?.trim() || "",
     x: input.x || input.longitude,
     y: input.y || input.latitude,
+    category_name: input.category_name,
   };
 }
 export default saveStore;

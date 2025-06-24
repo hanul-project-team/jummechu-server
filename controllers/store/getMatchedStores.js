@@ -15,7 +15,7 @@ const getMatchedStores = async (req, res) => {
     });
   }
   const allStores = await Store.find();
-  const maxDistance = 1000;
+  const maxDistance = 3000;
 
   const results = requestedTags.map((tag) => {
     const matchedStores = allStores.filter((store) => {
