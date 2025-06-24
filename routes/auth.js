@@ -37,7 +37,7 @@ router.post('/recent-history/add', protect, addRecentView);
 
 router.get("/logout", logout);
 router.get("/restore_login", restoreLogin);
-// router.get('/check', check)
+// router.get('/check', check)  
 router.get('/logout', logout)
 router.get('/myprofile', protect, myprofile)
 router.get('/recent-history', protect, getRecentViews); // 최근 기록 조회
