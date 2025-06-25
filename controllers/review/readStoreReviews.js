@@ -12,7 +12,7 @@ const readStoreReviews = async (req, res) => {
   try {
     const foundReviews = await Review.find({ store: storeId })
       .populate("store", "name address")
-      .populate("user", "name");
+      .populate("user", "name profileImage");
     if (foundReviews.length < 1) {
       return res.status(204).json(foundReviews);
     }
