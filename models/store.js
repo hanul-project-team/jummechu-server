@@ -46,8 +46,7 @@ const storeSchema = new mongoose.Schema({
     },
   ],
 });
-
-// const Store = mongoose.model("Store", storeSchema);
-const Store = mongoose.models.Store || mongoose.model('Store', storeSchema);
+storeSchema.index({ name: 1, address: 1 }, { unique: true });
+const Store = mongoose.model("Store", storeSchema);
 
 export default Store;

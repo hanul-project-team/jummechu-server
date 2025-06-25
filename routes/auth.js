@@ -9,6 +9,7 @@ import { verifyCode } from "../controllers/auth/verifyCode.js";
 import { verifyResetToken } from "../controllers/auth/verifyResetToken.js";
 import { resetPassword } from "../controllers/auth/resetPassword.js";
 import { googleVerify } from "../controllers/auth/googleVerify.js";
+import { kakaoVerify } from "../controllers/auth/kakaoVerify.js";
 import { accountSetting } from "../controllers/auth/accountSetting.js";
 import { logout } from "../controllers/auth/logout.js";
 import { restoreLogin } from "../controllers/auth/restoreLogin.js";
@@ -30,26 +31,21 @@ router.post("/send_link", sendLink);
 router.post("/verify_code", verifyCode);
 router.post("/verify_reset_token", verifyResetToken);
 router.post("/google_verify", googleVerify);
+router.post("/kakao_verify", kakaoVerify);
 router.post("/reset_password", resetPassword);
 router.post('/upload/profile', protect, uploadProfileImage, uploadProfile )
 router.post("/verify-password", protect, verifyPassword);
 router.post('/recent-history/add', protect, addRecentView); 
-
 router.get("/logout", logout);
 router.get("/restore_login", restoreLogin);
-// router.get('/check', check)  
 router.get('/logout', logout)
 router.get('/myprofile', protect, myprofile)
 router.get('/recent-history', protect, getRecentViews); // 최근 기록 조회
 router.get('/places/:id', getPlaceById); 
-
 router.put('/profile-image/reset',  protect, resetProfileImage);
 router.put('/change-password',  protect, changePassword);
 router.put('/profile',  protect, updateProfile);
-
 router.delete('/account', protect, deleteAccount);
-
-
 router.put("/reset_password", resetPassword);
 router.put("/account_setting/:id", accountSetting);
 

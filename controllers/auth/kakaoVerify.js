@@ -1,22 +1,38 @@
 import User from "../../models/user.js";
 import jwt from "jsonwebtoken";
-import { OAuth2Client } from "google-auth-library";
+import axios from "axios";
 
-export const googleVerify = async (req, res) => {
-  const { token } = req.body;
-  try {
-    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,
+export const kakaoVerify = async (req, res) => {
+  const { code } = req.body;
+  if (!code)
+    return res.status(400).json({
+      message: "인증 code가 필요합니다.",
     });
-    const payload = ticket.getPayload();
-    if (!payload) {
-      return res
-        .status(401)
-        .json({ message: "토큰 payload가 유효하지 않습니다." });
-    }
-    const user = await User.findOne({ email: payload.email });
+  try {
+    const tokenRes = await axios.post(
+      "https://kauth.kakao.com/oauth/token",
+      new URLSearchParams({
+        grant_type: "authorization_code",
+        client_id: process.env.KAKAO_KEY,
+        redirect_uri: process.env.KAKAO_REDIRECT_URI,
+        code,
+      }),
+      {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      }
+    );
+    const { access_token } = tokenRes.data;
+
+    const userRes = await axios.get("https://kapi.kakao.com/v2/user/me", {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    const kakaoUser = userRes.data;
+    const kakaoEmail = kakaoUser.kakao_account.email;
+    const kakaoName = kakaoUser.kakao_account.profile.nickname;
+
+    const user = await User.findOne({ email: kakaoEmail });
     const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -24,21 +40,20 @@ export const googleVerify = async (req, res) => {
     };
     if (!user) {
       const newUser = new User({
-        email: payload.email,
-        name: payload.name,
-        profileImage: payload.picture,
+        email: kakaoEmail,
+        name: kakaoName,
         isAccountSetting: false,
       });
       await newUser.save();
       const accessToken = jwt.sign(
-        { email: payload.email },
+        { email: kakaoEmail },
         process.env.ACCESS_SECRET_KEY,
         {
           expiresIn: "1h",
         }
       );
       const refreshToken = jwt.sign(
-        { email: payload.email },
+        { email: kakaoEmail },
         process.env.REFRESH_SECRET_KEY,
         {
           expiresIn: "15d",
@@ -58,7 +73,6 @@ export const googleVerify = async (req, res) => {
           id: newUser.id,
           email: newUser.email,
           name: newUser.name,
-          profileImage: newUser.profileImage,
           role: newUser.role,
           isAccountSetting: newUser.isAccountSetting,
         },
