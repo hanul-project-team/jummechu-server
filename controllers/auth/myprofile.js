@@ -46,8 +46,8 @@ export const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
     const { nickname, email, phone, name } = req.body;
-    console.log(`Backend: [updateProfile] 요청 사용자 ID: ${userId}`);
-    console.log(`Backend: [updateProfile] 수신된 데이터: 닉네임=${nickname}, 이메일=${email}, 전화=${phone}, 이름=${name}`);
+    // console.log(`Backend: [updateProfile] 요청 사용자 ID: ${userId}`);
+    // console.log(`Backend: [updateProfile] 수신된 데이터: 닉네임=${nickname}, 이메일=${email}, 전화=${phone}, 이름=${name}`);
 
     // 1. 유효성 검사
     if (!nickname || nickname.trim() === "") {
@@ -62,22 +62,10 @@ export const updateProfile = async (req, res) => {
       console.error(`Backend: [updateProfile] 사용자를 찾을 수 없습니다. ID: ${userId}`);
       return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
     }
-    console.log(`Backend: [updateProfile] 사용자(${user.email}) 찾음.`);
-    console.log(`Backend: [updateProfile] DB에서 가져온 현재 사용자 역할 (user.role): ${user.role}`);
 
-    // 3. 이메일 중복 검사 (본인 이메일은 제외)
-    if (email && email !== user.email) {
-      console.log(`Backend: [updateProfile] 이메일 변경 감지. 새 이메일: ${email}`);
-      const existingUserWithEmail = await User.findOne({ email });
-      if (existingUserWithEmail) {
-        console.warn(`Backend: [updateProfile] 이메일 중복 감지: ${email}`);
-        return res.status(409).json({ message: "이미 사용 중인 이메일입니다." });
-      }
-    }
 
     // 4. 닉네임 중복 검사 (본인 닉네임은 제외)
     if (nickname && nickname !== user.nickname) {
-      console.log(`Backend: [updateProfile] 닉네임 변경 감지. 새 닉네임: ${nickname}`);
       const existingUserWithNickname = await User.findOne({ nickname });
       if (existingUserWithNickname) {
         console.warn(`Backend: [updateProfile] 닉네임 중복 감지: ${nickname}`);
@@ -88,7 +76,7 @@ export const updateProfile = async (req, res) => {
     // 5. User.findByIdAndUpdate를 사용하여 직접 업데이트
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { nickname, email, phone, name }, // 업데이트할 필드를 객체로 전달
+      { nickname, phone, name }, // 업데이트할 필드를 객체로 전달
       { new: true, runValidators: true } // 업데이트된 문서를 반환하고 스키마 유효성 검사 실행
     ).select("-password"); // 비밀번호 필드는 제외
 
@@ -96,7 +84,6 @@ export const updateProfile = async (req, res) => {
         console.error(`Backend: [updateProfile] 사용자 정보 업데이트 후 문서를 찾을 수 없습니다. ID: ${userId}`);
         return res.status(500).json({ message: "프로필 정보 업데이트에 실패했습니다." });
     }
-    console.log("Backend: [updateProfile] 사용자 정보 DB 업데이트 성공.");
 
 
     // 6. 업데이트된 사용자 정보 반환
@@ -105,7 +92,7 @@ export const updateProfile = async (req, res) => {
       user: {
         id: updatedUser._id,
         nickname: updatedUser.nickname,
-        email: updatedUser.email,
+        // email: updatedUser.email,
         phone: updatedUser.phone,
         profileImage: updatedUser.profileImage,
         name: updatedUser.name,
@@ -119,12 +106,11 @@ export const updateProfile = async (req, res) => {
     }
     return res.status(500).json({ message: "서버 오류로 프로필 정보 업데이트에 실패했습니다." });
   } finally {
-    console.log("--- Backend: [updateProfile] 컨트롤러 실행 종료 ---");
+    // console.log("--- Backend: [updateProfile] 컨트롤러 실행 종료 ---");
   }
 };
 
 export const uploadProfile = async (req, res) => {
-  console.log("\n--- Backend: [uploadProfile] 컨트롤러 실행 시작 ---");
   try {
     if (!req.file) {
       console.error("Backend: [uploadProfile] 업로드된 파일이 없습니다.");
@@ -132,14 +118,7 @@ export const uploadProfile = async (req, res) => {
     }
 
     const profileImageUrl = `/uploads/profileuploads/${req.file.filename}`;
-    console.log(
-      "Backend: [uploadProfile] 생성된 profileImageUrl:",
-      profileImageUrl
-    );
-    console.log(
-      "Backend: [uploadProfile] req.user.id (protect 후):",
-      req.user.id
-    );
+
 
     const user = await User.findByIdAndUpdate(
       req.user.id, // Current logged-in user ID
@@ -155,10 +134,6 @@ export const uploadProfile = async (req, res) => {
       return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
     }
 
-    console.log(
-      "Backend: [uploadProfile] DB 업데이트 성공. 새 프로필 이미지:",
-      user.profileImage
-    );
 
     res.json({
       message: "프로필 이미지가 성공적으로 변경되었습니다.",
@@ -173,7 +148,6 @@ export const uploadProfile = async (req, res) => {
         phone: user.phone,
       },
     });
-    console.log("Backend: [uploadProfile] 응답 전송 완료.");
   } catch (error) {
     console.error(
       "Backend: [uploadProfile] 프로필 이미지 업로드 중 서버 오류:",
@@ -181,15 +155,12 @@ export const uploadProfile = async (req, res) => {
     );
     res.status(500).json({ message: "서버 오류가 발생했습니다." });
   } finally {
-    console.log("--- Backend: [uploadProfile] 컨트롤러 실행 종료 ---");
   }
 };
 
 export const resetProfileImage = async (req, res) => {
-  console.log("\n--- Backend: [resetProfileImage] 컨트롤러 실행 시작 ---");
   try {
     const userId = req.user.id;
-    console.log("Backend: [resetProfileImage] 요청 사용자 ID:", userId);
 
     const user = await User.findById(userId); // Get existing user info to handle physical file deletion
     if (!user) {
@@ -201,10 +172,7 @@ export const resetProfileImage = async (req, res) => {
     }
 
     const oldProfileImagePath = user.profileImage;
-    console.log(
-      "Backend: [resetProfileImage] 현재 DB에 저장된 이미지 경로 (삭제 전):",
-      oldProfileImagePath
-    );
+
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
@@ -221,10 +189,7 @@ export const resetProfileImage = async (req, res) => {
         .json({ message: "프로필 이미지 업데이트에 실패했습니다." });
     }
 
-    console.log(
-      "Backend: [resetProfileImage] DB profileImage 필드 빈 문자열로 업데이트 성공. DB에 저장된 값:",
-      updatedUser.profileImage
-    );
+
 
     // 2. Delete physical file from server (only if it's an uploaded file)
     if (
@@ -237,10 +202,7 @@ export const resetProfileImage = async (req, res) => {
         "../../uploads/profileuploads", // New uploads directory relative to this controller
         fileName
       );
-      console.log(
-        "Backend: [resetProfileImage] 삭제할 물리적 파일 경로:",
-        filePath
-      );
+
 
       fs.unlink(filePath, (err) => {
         if (err) {
@@ -258,17 +220,11 @@ export const resetProfileImage = async (req, res) => {
             );
           }
         } else {
-          console.log(
-            "Backend: [resetProfileImage] 기존 프로필 이미지 파일 삭제 성공:",
-            filePath
-          );
+
         }
       });
     } else {
-      console.log(
-        "Backend: [resetProfileImage] 삭제할 물리적 파일 없음 (업로드된 이미지가 아니거나 이미 기본 상태). 현재 profileImage 값:",
-        oldProfileImagePath
-      );
+
     }
 
     return res.status(200).json({
@@ -294,8 +250,6 @@ export const resetProfileImage = async (req, res) => {
         message: "서버 오류로 프로필 이미지 초기화에 실패했습니다.",
         error: error.message,
       });
-  } finally {
-    console.log("--- Backend: [resetProfileImage] 컨트롤러 실행 종료 ---");
   }
 };
 
@@ -304,28 +258,19 @@ export const changePassword = async (req, res) => {
     const userId = req.user.id;
     const { newPassword, confirmPassword } = req.body;
 
-    console.log("백엔드 changePassword 호출됨. userId:", userId);
-    console.log(
-      "받은 데이터 - newPassword:",
-      newPassword,
-      "confirmPassword:",
-      confirmPassword
-    );
+
 
     if (!newPassword || !confirmPassword) {
-      console.log("changePassword: 새 비밀번호 또는 확인 비밀번호 누락");
       return res
         .status(400)
         .json({ message: "새 비밀번호와 확인 비밀번호를 모두 입력해주세요." });
     }
     if (newPassword !== confirmPassword) {
-      console.log("changePassword: 새 비밀번호와 확인 비밀번호 불일치");
       return res
         .status(400)
         .json({ message: "새 비밀번호가 일치하지 않습니다." });
     }
     if (newPassword.length < 6) {
-      console.log("changePassword: 새 비밀번호 길이가 너무 짧음");
       return res
         .status(400)
         .json({ message: "새 비밀번호는 최소 6자 이상이어야 합니다." });
@@ -333,14 +278,12 @@ export const changePassword = async (req, res) => {
 
     const user = await User.findById(userId);
     if (!user) {
-      console.log("changePassword: 사용자를 찾을 수 없음");
       return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
     }
 
     const salt = await bcrypt.genSalt(10); // Generate salt
     const hashedPassword = await bcrypt.hash(newPassword, salt); // Hash new password
 
-    console.log("changePassword: 생성된 해시 비밀번호:", hashedPassword); // Log hash value
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
@@ -349,18 +292,12 @@ export const changePassword = async (req, res) => {
     );
 
     if (!updatedUser) {
-      console.log(
-        "changePassword: 비밀번호 업데이트 후 사용자 찾을 수 없음 (비정상)"
-      );
+
       return res.status(500).json({
         message: "비밀번호 업데이트 후 사용자 정보를 찾을 수 없습니다.",
       });
     }
 
-    console.log(
-      "changePassword: 비밀번호 성공적으로 변경됨. DB에 최종 저장된 해시:",
-      updatedUser.password
-    ); // Confirm password in returned user
 
     res.status(200).json({ message: "비밀번호가 성공적으로 변경되었습니다." });
   } catch (error) {
@@ -413,10 +350,7 @@ export const deleteAccount = async (req, res) => {
           "../../uploads/profileuploads", // New uploads directory
           fileName
         );
-        console.log(
-          "Backend: [deleteAccount] 삭제할 물리적 파일 경로:",
-          filePath
-        );
+
 
         fs.unlink(filePath, (err) => {
           if (err) {
@@ -432,18 +366,15 @@ export const deleteAccount = async (req, res) => {
               );
             }
           } else {
-            console.log(
-              "Backend: [deleteAccount] 계정 삭제 시 프로필 이미지 파일 삭제 성공:",
-              filePath
-            );
+
           }
         });
       }
     } else {
-      console.log(
-        "Backend: [deleteAccount] 삭제할 물리적 파일 없음 (업로드된 이미지가 아니거나 기본 이미지). 현재 profileImage 값:",
-        profileImagePathToDelete
-      );
+      // console.log(
+      //   "Backend: [deleteAccount] 삭제할 물리적 파일 없음 (업로드된 이미지가 아니거나 기본 이미지). 현재 profileImage 값:",
+      //   profileImagePathToDelete
+      // );
     }
 
     // 2. Delete user from database

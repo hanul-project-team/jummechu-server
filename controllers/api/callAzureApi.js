@@ -10,10 +10,9 @@ const router = express.Router();
 // 환경 변수에서 값 가져오기
 const deployment = process.env.AZURE_OPENAI_DALLE_DEPLOYMENT_NAME; // DALL-E 배포 이름
 const dalleApiVersion = process.env.AZURE_OPENAI_DALLE_API_VERSION; // ★★★ DALL-E API 버전 ★★★
-console.log("Backend: DALL-E API Version from env (dalleApiVersion):", dalleApiVersion); // 이 값을 백엔드 콘솔에서 확인하세요!
 
 
-const endpoint = process.env.AZURE_OPENAI_ENDPOINT; 
+const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
 const apiKey = process.env.AZURE_OPENAI_API_KEY;
 const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT; // OpenAI 텍스트 모델 배포 이름
 const openaiApiVersion = process.env.AZURE_OPENAI_API_VERSION || "2024-02-15"; // OpenAI 텍스트 모델 API 버전
@@ -21,7 +20,7 @@ const openaiApiVersion = process.env.AZURE_OPENAI_API_VERSION || "2024-02-15"; /
 router.post("/openai", async (req, res) => {
     // 프롬프트와 함께 위도, 경도 정보도 req.body에서 추출
     const { prompt: userPrompt, latitude, longitude } = req.body;
-    console.log('Received /api/azure/openai request body:', req.body);
+    // console.log('Received /api/azure/openai request body:', req.body);
 
     if (!userPrompt || String(userPrompt).trim() === '') {
         return res.status(400).json({ error: "프롬프트가 제공되지 않았습니다." });
@@ -31,11 +30,11 @@ router.post("/openai", async (req, res) => {
     let fullPrompt = userPrompt;
     if (latitude && longitude) {
         fullPrompt = `사용자의 현재 위치 (위도: ${latitude}, 경도: ${longitude}) 근처에서, ${userPrompt}`;
-        console.log(`AI 프롬프트에 위치 정보 추가됨: 위도 ${latitude}, 경도 ${longitude}`);
+        // console.log(`AI 프롬프트에 위치 정보 추가됨: 위도 ${latitude}, 경도 ${longitude}`);
     } else {
-        console.log("위치 정보가 제공되지 않습니다. 일반적인 추천을 수행합니다.");
+        // console.log("위치 정보가 제공되지 않습니다. 일반적인 추천을 수행합니다.");
     }
-    console.log('OpenAI로 전송될 최종 프롬프트:', fullPrompt);
+    // console.log('OpenAI로 전송될 최종 프롬프트:', fullPrompt);
 
     try {
         const response = await axios.post(
@@ -45,7 +44,7 @@ router.post("/openai", async (req, res) => {
                     { role: "system", content: "당신은 음식점 추천 전문가입니다. 요청된 정보만 JSON 형식의 문자열로 제공하세요. 추가적인 설명은 하지 마십시오." },
                     { role: "user", content: fullPrompt }, // 수정된 프롬프트 사용
                 ],
-                max_tokens: 1000, 
+                max_tokens: 1000,
                 temperature: 0.7,
             },
             {
@@ -57,14 +56,14 @@ router.post("/openai", async (req, res) => {
         );
 
         const replyContent = response.data.choices[0].message.content;
-        console.log('OpenAI로부터 받은 원시 응답:', replyContent);
+        // console.log('OpenAI로부터 받은 원시 응답:', replyContent);
 
         try {
             const parsedReply = JSON.parse(replyContent);
-            res.status(200).json(parsedReply); 
+            res.status(200).json(parsedReply);
         } catch (jsonParseError) {
             console.warn("OpenAI 응답이 유효한 JSON 형식이 아닙니다. 원시 문자열로 전송합니다.", jsonParseError);
-            res.status(200).json(replyContent); 
+            res.status(200).json(replyContent);
         }
 
     } catch (error) {
@@ -124,10 +123,10 @@ function getPriorityKeywords(keywordCounts) {
 }
 
 router.post("/dalle", async (req, res) => {
-    console.log("Received /api/azure/dalle request body:", req.body);
+    // console.log("Received /api/azure/dalle request body:", req.body);
     try {
         const userPrompt = req.body.prompt;
-        
+
         const keywordCounts = analyzeKeywords(userPrompt);
         const priorityKeywords = getPriorityKeywords(keywordCounts);
 
@@ -140,7 +139,7 @@ router.post("/dalle", async (req, res) => {
             finalPrompt += "맛있는 음식";
         }
         finalPrompt += promptSuffix;
-        console.log("생성될 최종 프롬프트:", finalPrompt);
+        // console.log("생성될 최종 프롬프트:", finalPrompt);
 
         const client = await getClient();
         const results = await client.images.generate({
@@ -152,7 +151,7 @@ router.post("/dalle", async (req, res) => {
         });
 
         if (results.data && results.data.length > 0 && results.data[0].url) {
-            console.log("DALL-E 이미지 생성 성공:", results.data[0].url);
+            // console.log("DALL-E 이미지 생성 성공:", results.data[0].url);
             res.json({ imageUrl: results.data[0].url });
         } else {
             console.error("DALL-E 이미지 생성 실패:", results);
