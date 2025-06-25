@@ -1,5 +1,5 @@
 
-import Store from '../../models/Store.js'; // Store 모델 임포트
+import Store from '../../models/store.js'; // Store 모델 임포트
 import mongoose from 'mongoose'; // ObjectId 유효성 검사를 위해 mongoose 임포트
 
 // 모든 가게를 조회하는 함수 (필요하다면 사용)
