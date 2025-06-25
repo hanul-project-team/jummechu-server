@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
+
+
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -14,6 +16,10 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: false,
+  },
+  nickname: {
+    type: String,
+    unique: true,
   },
   phone: {
     type: String,
@@ -47,6 +53,7 @@ const userSchema = new mongoose.Schema({
     default: false,
   },
 });
+
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password") || !this.password) {

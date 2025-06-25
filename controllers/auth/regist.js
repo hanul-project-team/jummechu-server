@@ -1,8 +1,24 @@
 import User from "../../models/user.js";
 
+
+
+
+
 export const regist = async (req, res) => {
-  const { email, password, name, phone, role, service, privacy, business } =
+  const { email, password, name, phone, role, service, privacy, business, } =
     req.body;
+
+    const RandomNickname = () => {
+           const second = ["배고픈", "심심한", "말이많은"]
+           const last = ["강아지", "고양이", "호랑이", "상어", "비버", "족제비", "곰", "직장인"]
+
+           const secondIndex = Math.floor(Math.random() * second.length);
+           const lastIndex = Math.floor(Math.random() * last.length);
+
+           return `${second[secondIndex]}${last[lastIndex]}`;
+       };
+
+
   try {
     const exisUser = await User.findOne({ email });
     if (exisUser) {
@@ -15,6 +31,7 @@ export const regist = async (req, res) => {
       password,
       phone,
       name,
+            nickname: RandomNickname() ,
       role,
       agreement: { service, privacy, business },
       isAccountSetting: true
