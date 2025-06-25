@@ -55,7 +55,7 @@ router.post("/search", async (req, res) => {
           params: {
             query: query,
             page: 1,
-            size: 5,
+            size: 15,
             category_group_code: code,
             x: center.lng,
             y: center.lat,
