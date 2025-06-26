@@ -35,7 +35,7 @@ const saveStore = async (req, res) => {
             address: placeData?.address,
             latitude: placeData.y,
             longitude: placeData.x,
-            phone: placeData.phone,
+            phone: placeData?.phone ?? "",
             keywords: placeData?.summary?.keyword || [],
             description: placeData?.summary?.description || "",
             photos: [],
@@ -127,6 +127,7 @@ function normalizePlaceInput(input) {
     x: input.x || input.longitude,
     y: input.y || input.latitude,
     category_name: input.category_name,
+    phone: input?.phone ?? ""
   };
 }
 export default saveStore;
