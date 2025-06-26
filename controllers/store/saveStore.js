@@ -126,7 +126,7 @@ function normalizePlaceInput(input) {
     x: input.x || input.longitude,
     y: input.y || input.latitude,
     category_name: input.category_name,
-    phone: input.phone,
+    phone: input?.phone ?? "",
   };
 }
 export default saveStore;
