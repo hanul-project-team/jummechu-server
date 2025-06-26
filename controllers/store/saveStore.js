@@ -4,7 +4,6 @@ import generateKeyAndDesc from "../../service/openai_keyword/callOpenai.js";
 
 const saveStore = async (req, res) => {
   const rawPlaces = Array.isArray(req.body) ? req.body : [req.body];
-  console.log(rawPlaces)
   if (rawPlaces.length === 0) {
     return res.status(400).json({ msg: "등록할 데이터가 없습니다." });
   }
