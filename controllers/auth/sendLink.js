@@ -12,7 +12,7 @@ export const sendLink = async (req, res) => {
     const resetToken = jwt.sign({ email }, process.env.RESET_SECRET_KEY, {
       expiresIn: "10m",
     });
-    const resetLink = `http://localhost:5173/find_account/reset?token=${resetToken}`;
+    const resetLink = `${process.env.CORS_ORIGIN}/find_account/reset?token=${resetToken}`;
 
     await axios.post(
       `https://email.api.nhncloudservice.com/email/v2.1/appKeys/${process.env.NHN_APP_KEY}/sender/mail`,
