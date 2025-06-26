@@ -34,7 +34,7 @@ const saveStore = async (req, res) => {
             address: placeData?.address,
             latitude: placeData.y,
             longitude: placeData.x,
-            phone: placeData.phone || [],
+            phone: placeData?.phone ?? "",
             keywords: placeData?.summary?.keyword || [],
             description: placeData?.summary?.description || "",
             photos: [],
